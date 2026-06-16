@@ -1,0 +1,421 @@
+﻿<!DOCTYPE html>
+<html lang="uz" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Matnshunoslik platformasi — adabiy, tarixiy, ilmiy va informatsion manbalar to'plami. Yuklab olish, iqtibos qilish va bibliografik ma'lumotlar."/>
+  <title>Manbalar Platformasi — Matnshunoslik Platformasi</title>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/extras.css"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>"/>
+  <style>
+    .page-hero { padding:140px 0 60px; text-align:center; position:relative; overflow:hidden; }
+    .page-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(201,162,39,0.07),transparent 60%); pointer-events:none; }
+
+    /* Kategoriya tabs */
+    .category-tabs { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:48px; }
+    .cat-tab {
+      display:flex; align-items:center; gap:10px;
+      padding:12px 24px; border-radius:var(--border-radius);
+      border:1px solid var(--border); background:var(--bg-card);
+      cursor:pointer; transition:all var(--transition-base);
+      text-decoration:none; color:var(--text-secondary);
+      font-size:0.88rem; font-weight:500;
+    }
+    .cat-tab:hover { border-color:var(--border-hover); color:var(--text-primary); transform:translateY(-2px); }
+    .cat-tab.active { background:var(--gold-glow); border-color:var(--gold); color:var(--gold); box-shadow:var(--shadow-gold); }
+    .cat-tab-icon { font-size:1.3rem; }
+    .cat-tab-count { font-size:0.72rem; background:var(--bg-glass-light); padding:2px 8px; border-radius:100px; }
+
+    /* Qidiruv */
+    .sources-search { display:flex; justify-content:center; margin-bottom:16px; }
+    .sources-search .search-box { max-width:560px; width:100%; }
+
+    /* Manbalar grid */
+    .sources-section { padding:0 0 80px; }
+    .sources-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:20px; }
+
+    .source-card {
+      background:var(--bg-card); border:1px solid var(--border); border-radius:var(--border-radius);
+      overflow:hidden; transition:all var(--transition-base); position:relative; display:flex; flex-direction:column;
+    }
+    .source-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, transparent, var(--gold), transparent); opacity:0; transition:opacity var(--transition-base); }
+    .source-card:hover { border-color:var(--border-hover); transform:translateY(-4px); box-shadow:var(--shadow-gold); }
+    .source-card:hover::before { opacity:1; }
+
+    .source-card-top { padding:20px 20px 16px; }
+    .source-type-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .source-icon { font-size:1.6rem; }
+    .source-title { font-family:var(--font-display); font-size:1rem; margin-bottom:5px; }
+    .source-author { font-size:0.8rem; color:var(--gold); margin-bottom:4px; }
+    .source-meta { font-size:0.75rem; color:var(--text-muted); }
+    .source-desc { font-size:0.82rem; color:var(--text-secondary); line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; margin-top:10px; }
+
+    .source-card-actions { padding:14px 20px; border-top:1px solid var(--divider); display:flex; gap:8px; margin-top:auto; }
+    .source-btn { padding:7px 14px; border-radius:var(--border-radius-sm); font-size:0.78rem; font-weight:500; cursor:pointer; font-family:var(--font-body); border:none; transition:all var(--transition-fast); display:flex; align-items:center; gap:5px; }
+    .source-btn-primary { background:var(--gold-glow); color:var(--gold); border:1px solid rgba(201,162,39,0.3); }
+    .source-btn-primary:hover { background:var(--gold); color:var(--text-inverse); }
+    .source-btn-ghost { background:var(--bg-glass-light); color:var(--text-secondary); border:1px solid var(--border); }
+    .source-btn-ghost:hover { background:var(--bg-card-hover); color:var(--text-primary); }
+
+    /* Iqtibos modal */
+    .cite-tabs { display:flex; gap:0; margin-bottom:16px; border-radius:var(--border-radius-sm); overflow:hidden; border:1px solid var(--border); }
+    .cite-tab { flex:1; padding:8px; text-align:center; cursor:pointer; font-size:0.8rem; background:var(--bg-card); color:var(--text-muted); transition:all var(--transition-fast); border:none; font-family:var(--font-body); }
+    .cite-tab.active { background:var(--gold-glow); color:var(--gold); }
+    .cite-text { background:var(--bg-deep); border:1px solid var(--border); border-radius:var(--border-radius-sm); padding:16px; font-size:0.82rem; color:var(--text-secondary); line-height:1.7; font-family:monospace; word-break:break-word; }
+    .cite-copy-btn { margin-top:8px; }
+
+    .section-sep { display:flex; align-items:center; gap:12px; margin:40px 0 24px; }
+    .section-sep::before,.section-sep::after { content:''; flex:1; height:1px; background:var(--divider); }
+    .section-sep-label { font-size:0.75rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); white-space:nowrap; }
+  </style>
+</head>
+<body data-page-key="sources.title">
+  <div id="nav-container"></div>
+
+  <main class="pt-nav">
+    <!-- Hero -->
+    <section class="page-hero">
+      <div class="container">
+        <span style="font-size:3rem;display:block;margin-bottom:16px">📚</span>
+        <div class="section-label" data-i18n="sources.title"></div>
+        <h1 style="font-size:clamp(2rem,4vw,3rem);margin-bottom:12px" data-i18n="sources.title"></h1>
+        <p style="color:var(--text-secondary);max-width:580px;margin:0 auto 36px" data-i18n="sources.desc"></p>
+
+        <!-- Kategoriya tabs -->
+        <div class="category-tabs" id="category-tabs">
+          <button class="cat-tab active" data-cat="all">
+            <span class="cat-tab-icon">📚</span>
+            <span>Barchasi</span>
+            <span class="cat-tab-count" id="cnt-all">12</span>
+          </button>
+          <button class="cat-tab" data-cat="literary">
+            <span class="cat-tab-icon">📖</span>
+            <span data-i18n="sources.literary"></span>
+            <span class="cat-tab-count" id="cnt-literary">4</span>
+          </button>
+          <button class="cat-tab" data-cat="historical">
+            <span class="cat-tab-icon">📰</span>
+            <span data-i18n="sources.historical"></span>
+            <span class="cat-tab-count" id="cnt-historical">3</span>
+          </button>
+          <button class="cat-tab" data-cat="scientific">
+            <span class="cat-tab-icon">🔍</span>
+            <span data-i18n="sources.scientific"></span>
+            <span class="cat-tab-count" id="cnt-scientific">3</span>
+          </button>
+          <button class="cat-tab" data-cat="informational">
+            <span class="cat-tab-icon">ℹ️</span>
+            <span data-i18n="sources.informational"></span>
+            <span class="cat-tab-count" id="cnt-informational">2</span>
+          </button>
+        </div>
+
+        <!-- Qidiruv -->
+        <div class="sources-search">
+          <div class="search-box">
+            <input type="search" id="source-search" class="search-input" placeholder="Manba nomi, muallif yoki kalit so'z..." autocomplete="off"/>
+            <span class="search-icon">🔍</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Manbalar -->
+    <section class="sources-section">
+      <div class="container">
+        <div class="sources-grid stagger-children" id="sources-grid">
+          <div class="loading-overlay" style="grid-column:1/-1"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Iqtibos Modal -->
+  <div class="modal-overlay" id="cite-modal">
+    <div class="modal" style="max-width:560px;position:relative">
+      <button class="modal-close" id="cite-modal-close" style="position:absolute;top:16px;right:16px">✕</button>
+      <div class="modal-header">
+        <h3 style="font-family:var(--font-display)">📎 Iqtibos qilish</h3>
+      </div>
+      <div class="modal-body">
+        <div class="cite-tabs">
+          <button class="cite-tab active" data-cformat="apa">APA</button>
+          <button class="cite-tab" data-cformat="chicago">Chicago</button>
+          <button class="cite-tab" data-cformat="gost">GOST</button>
+        </div>
+        <div class="cite-text" id="cite-text"></div>
+        <button class="btn btn-ghost btn-sm cite-copy-btn" onclick="copyCite()">📋 Nusxa olish</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/supabase.js"></script>
+  <script>
+    // Demo manbalar ma'lumotlari
+    const SOURCES_DATA = [
+      // ADABIY MANBALAR
+      {
+        id: 'src-001', category: 'literary', icon: '📜',
+        title: 'Xamsa — Ilmiy-Tanqidiy Matn',
+        author: 'Alisher Navoiy (nashr: Hamid Sulaymon)',
+        year: 1970, publisher: 'Fan nashryoti', city: 'Toshkent',
+        desc: 'Alisher Navoiyning besh dostondan iborat ulkan asarining ilmiy-tanqidiy nashri. 200 dan ortiq qo\'lyozma nusxasi asosida tayyorlangan.',
+        type: 'Ilmiy nashr', lang: 'O\'zbek (chig\'atoy)',
+        badge: 'badge-gold'
+      },
+      {
+        id: 'src-002', category: 'literary', icon: '📜',
+        title: 'Boburnoma (Vaqoyi\')',
+        author: 'Zahiriddin Muhammad Bobur (nashr: Eiji Mano)',
+        year: 1995, publisher: 'Syokado', city: 'Kyoto',
+        desc: 'Boburning xotiralari — Kyoto nashrining eng to\'liq va mukammal ilmiy-tanqidiy nashri. Faksimile, transkripsiya va izohlar bilan.',
+        type: 'Ilmiy nashr', lang: 'O\'zbek (chig\'atoy)',
+        badge: 'badge-ruby'
+      },
+      {
+        id: 'src-003', category: 'literary', icon: '📖',
+        title: 'Devonu lug\'otit turk',
+        author: 'Mahmud Koshg\'ariy (tarjima: Robert Dankoff)',
+        year: 1982, publisher: 'Harvard University Press', city: 'Cambridge',
+        desc: 'XI asrning buyuk turkiy lug\'ati. Ingliz tiliga tarjima va ilmiy izohlar bilan. Turk filologiyasining asosiy manbasi.',
+        type: 'Tarjima nashr', lang: 'Arab/Ingliz',
+        badge: 'badge-emerald'
+      },
+      {
+        id: 'src-004', category: 'literary', icon: '📖',
+        title: 'Devonu Favoid ul-Kabir va Hazoinul-Maoniy',
+        author: 'Alisher Navoiy (nashr: Aziz Qayumov)',
+        year: 1977, publisher: 'O\'zbekiston FA', city: 'Toshkent',
+        desc: 'Navoiyning to\'rt devoni: G\'aroyibul-sug\'ar, Navodirush-shabob, Badoye\'ul-vasat, Favoidul-kibar. To\'liq ilmiy nashr.',
+        type: 'Ilmiy nashr', lang: 'O\'zbek',
+        badge: 'badge-gold'
+      },
+      // TARIXIY MANBALAR
+      {
+        id: 'src-005', category: 'historical', icon: '📰',
+        title: 'Temuriylar davri tarixiy hujjatlari',
+        author: 'Tahrir hay\'ati: V.V. Bartold va b.',
+        year: 1959, publisher: 'Nauka nashryoti', city: 'Moskva',
+        desc: 'XV asrning Hirot va Samarqand madrasalari, kutubxonalari va saroylariga oid tarixiy hujjatlar to\'plami. Arab va fors tillarida.',
+        type: 'Hujjatlar to\'plami', lang: 'Arab / Fors',
+        badge: 'badge-leather'
+      },
+      {
+        id: 'src-006', category: 'historical', icon: '📜',
+        title: 'Zafarnoma',
+        author: 'Sharafuddin Ali Yazdiy (nashr: A.Urunbaev)',
+        year: 1972, publisher: 'Fan nashryoti', city: 'Toshkent',
+        desc: 'Amir Temur haqidagi asosiy tarixiy manba. XV asrda yozilgan. Siyosiy, ijtimoiy va madaniy tarix uchun muhim qaynоq.',
+        type: 'Tarixiy asar', lang: 'Fors tili',
+        badge: 'badge-leather'
+      },
+      {
+        id: 'src-007', category: 'historical', icon: '📜',
+        title: 'Baburiylar imperiyasining diplomatik hujjatlari',
+        author: 'Abdulloh Murodov (nashr)',
+        year: 1988, publisher: 'O\'zbekiston FA', city: 'Toshkent',
+        desc: 'XVI asrning diplomatik maktublari va farmonlari. Boburiylar davri siyosiy munosabatlarini o\'rganish uchun birlamchi manba.',
+        type: 'Diplomatik hujjatlar', lang: 'Fors / O\'zbek',
+        badge: 'badge-sapphire'
+      },
+      // ILMIY MANBALAR
+      {
+        id: 'src-008', category: 'scientific', icon: '🔍',
+        title: 'O\'zbek adabiyoti tarixi (4 jildlik)',
+        author: 'Natan Mallayev',
+        year: 1963, publisher: 'Fan nashryoti', city: 'Toshkent',
+        desc: 'O\'zbek adabiyotining ko\'p asrlik tarixini qamrab olgan fundamental tadqiqot. Matnshunoslik, adabiy tanqid va adabiyot tarixi metodologiyasi bilan.',
+        type: 'Monografiya', lang: 'O\'zbek',
+        badge: 'badge-emerald'
+      },
+      {
+        id: 'src-009', category: 'scientific', icon: '📗',
+        title: 'Navoiy asarlari matnshunosligiga doir',
+        author: 'Hamid Sulaymon',
+        year: 1965, publisher: 'Fan nashryoti', city: 'Toshkent',
+        desc: 'Navoiy asarlarining qo\'lyozma nusxalarini taqqoslash metodologiyasi, variant tahlili va matn tuzish printsiplari haqida.',
+        type: 'Monografiya', lang: 'O\'zbek',
+        badge: 'badge-gold'
+      },
+      {
+        id: 'src-010', category: 'scientific', icon: '📘',
+        title: 'Matnshunoslik va manbashunoslik asoslari',
+        author: 'Aziz Qayumov',
+        year: 1985, publisher: 'O\'qituvchi', city: 'Toshkent',
+        desc: 'Matnshunoslik ilmining nazariy asoslari, metodologiyasi va amaliy qo\'llanma. Oliy o\'quv yurtlari uchun darslik.',
+        type: 'Darslik', lang: 'O\'zbek',
+        badge: 'badge-sapphire'
+      },
+      // INFORMATSION MANBALAR
+      {
+        id: 'src-011', category: 'informational', icon: 'ℹ️',
+        title: 'O\'zbek tilining izohli lug\'ati (5 jildlik)',
+        author: 'O\'zbekiston FA Til va Adabiyot instituti',
+        year: 1981, publisher: 'Fan nashryoti', city: 'Toshkent',
+        desc: 'O\'zbek adabiy tilining to\'liq lug\'ati. 80,000 dan ortiq so\'z, ularning izohlari, ko\'p ma\'noliligi va qo\'llanish namunalari.',
+        type: 'Lug\'at', lang: 'O\'zbek',
+        badge: 'badge-gold'
+      },
+      {
+        id: 'src-012', category: 'informational', icon: '📙',
+        title: 'Sharq qo\'lyozmalari ensiklopediyasi',
+        author: 'Tahrir hay\'ati',
+        year: 2001, publisher: 'Sharq', city: 'Toshkent',
+        desc: 'O\'rta Osiyo va yaqin sharq qo\'lyozmalari haqidagi ma\'lumotnoma ensiklopediyasi. Saqlash joylari, kataloglar va tadqiqotchilar haqida.',
+        type: 'Ensiklopediya', lang: 'O\'zbek / Rus',
+        badge: 'badge-leather'
+      }
+    ];
+
+    let activeCategory = 'all';
+    let searchQuery    = '';
+    let currentSource  = null;
+    let currentFormat  = 'apa';
+
+    async function PageInit() {
+      renderSources();
+      initCategoryTabs();
+      initSearch();
+      initCiteModal();
+    }
+
+    function renderSources() {
+      const grid = document.getElementById('sources-grid');
+
+      const filtered = SOURCES_DATA.filter(s => {
+        if (activeCategory !== 'all' && s.category !== activeCategory) return false;
+        if (searchQuery) {
+          const t = (s.title + ' ' + s.author).toLowerCase();
+          if (!t.includes(searchQuery)) return false;
+        }
+        return true;
+      });
+
+      if (!filtered.length) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:80px 0;color:var(--text-muted)"><span style="font-size:3rem">🔍</span><p style="margin-top:12px">Hech narsa topilmadi</p></div>`;
+        return;
+      }
+
+      // Kategoriya bo'yicha guruhlash
+      const cats = { literary:'📖 Adabiy manbalar', historical:'📜 Tarixiy manbalar', scientific:'🔍 Ilmiy manbalar', informational:'📘 Informatsion manbalar' };
+      let html = '';
+      if (activeCategory === 'all') {
+        ['literary','historical','scientific','informational'].forEach(cat => {
+          const items = filtered.filter(s => s.category === cat);
+          if (!items.length) return;
+          html += `<div class="section-sep" style="grid-column:1/-1"><span class="section-sep-label">${cats[cat]}</span></div>`;
+          html += items.map(s => sourceCard(s)).join('');
+        });
+      } else {
+        html = filtered.map(s => sourceCard(s)).join('');
+      }
+
+      grid.innerHTML = html;
+      ScrollAnim.init();
+
+      // Tugmalar event
+      grid.querySelectorAll('.cite-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          openCiteModal(id);
+        });
+      });
+    }
+
+    function sourceCard(s) {
+      return `
+      <article class="source-card fade-in">
+        <div class="source-card-top">
+          <div class="source-type-row">
+            <span class="source-icon">${s.icon}</span>
+            <span class="badge ${s.badge}">${s.type}</span>
+          </div>
+          <h2 class="source-title">${s.title}</h2>
+          <div class="source-author">✍️ ${s.author}</div>
+          <div class="source-meta">📅 ${s.year} &nbsp;|&nbsp; 🏢 ${s.publisher}, ${s.city} &nbsp;|&nbsp; 🌐 ${s.lang}</div>
+          <p class="source-desc">${s.desc}</p>
+        </div>
+        <div class="source-card-actions">
+          <button class="source-btn source-btn-primary cite-btn" data-id="${s.id}">📎 Iqtibos</button>
+          <button class="source-btn source-btn-ghost" onclick="Toast.show('Demo versiyada yuklab olish mavjud emas', 'info')">⬇️ Yuklab olish</button>
+          <button class="source-btn source-btn-ghost" onclick="Toast.show('Ko\'rib chiqish tez orada qo\'shiladi', 'info')">👁️ Ko\'rish</button>
+        </div>
+      </article>`;
+    }
+
+    function openCiteModal(id) {
+      currentSource = SOURCES_DATA.find(s => s.id === id);
+      if (!currentSource) return;
+      updateCiteText();
+      Modal.open('cite-modal');
+    }
+
+    function updateCiteText() {
+      if (!currentSource) return;
+      const s = currentSource;
+      const citeEl = document.getElementById('cite-text');
+      const cites = {
+        apa:     `${s.author.split('(')[0].trim()} (${s.year}). <em>${s.title}</em>. ${s.city}: ${s.publisher}.`,
+        chicago: `${s.author.split('(')[0].trim()}. <em>${s.title}</em>. ${s.city}: ${s.publisher}, ${s.year}.`,
+        gost:    `${s.author.split('(')[0].trim()} ${s.title} [Matn] / ${s.author}. — ${s.city}: ${s.publisher}, ${s.year}.`
+      };
+      citeEl.innerHTML = cites[currentFormat] || cites.apa;
+    }
+
+    function copyCite() {
+      const text = document.getElementById('cite-text').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        Toast.show('Iqtibos nusxa olindi!', 'success');
+      }).catch(() => {
+        Toast.show('Nusxa olishda xatolik', 'error');
+      });
+    }
+    window.copyCite = copyCite;
+
+    function initCategoryTabs() {
+      document.querySelectorAll('.cat-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeCategory = btn.dataset.cat;
+          renderSources();
+        });
+      });
+    }
+
+    function initSearch() {
+      const input = document.getElementById('source-search');
+      if (!input) return;
+      let timer;
+      input.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { searchQuery = input.value.trim().toLowerCase(); renderSources(); }, 300);
+      });
+    }
+
+    function initCiteModal() {
+      document.querySelectorAll('.cite-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.cite-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          currentFormat = tab.dataset.cformat;
+          updateCiteText();
+        });
+      });
+      document.getElementById('cite-modal-close').addEventListener('click', () => Modal.close('cite-modal'));
+    }
+
+    I18n.onChange(() => { renderSources(); });
+  </script>
+
+  <script src="js/effects.js"></script>
+  <script src="js/ai-assistant.js"></script>
+</body>
+</html>

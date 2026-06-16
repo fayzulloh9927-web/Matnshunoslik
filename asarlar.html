@@ -1,0 +1,385 @@
+﻿<!DOCTYPE html>
+<html lang="uz" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Matnshunoslik platformasi — asarlar tahlili. Qo'lyozmalar, nashrlar, ilmiy-tanqidiy tahlillar. Xamsa, Boburnoma, Devonu lug'otit turk va boshqalar."/>
+  <title>Asar Tahlillari — Matnshunoslik Platformasi</title>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/extras.css"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📜</text></svg>"/>
+  <style>
+    .page-hero { padding:140px 0 60px; text-align:center; position:relative; overflow:hidden; }
+    .page-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(201,162,39,0.07),transparent 60%); pointer-events:none; }
+
+    /* Layout */
+    .works-layout { display:grid; grid-template-columns:240px 1fr; gap:32px; padding:24px 0 80px; }
+    @media(max-width:900px) { .works-layout { grid-template-columns:1fr; } .works-sidebar { display:none; } }
+
+    /* Sidebar */
+    .works-sidebar { position:sticky; top:calc(var(--nav-height) + 24px); align-self:start; }
+    .sidebar-section { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--border-radius); padding:20px; margin-bottom:16px; }
+    .sidebar-title { font-size:0.78rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+    .sidebar-filter-list { list-style:none; display:flex; flex-direction:column; gap:4px; }
+    .sidebar-filter-item { padding:8px 12px; border-radius:var(--border-radius-sm); cursor:pointer; font-size:0.83rem; color:var(--text-secondary); transition:all var(--transition-fast); display:flex; align-items:center; gap:8px; }
+    .sidebar-filter-item:hover { background:var(--bg-glass-light); color:var(--text-primary); }
+    .sidebar-filter-item.active { background:var(--gold-glow); color:var(--gold); font-weight:600; }
+
+    /* Asosiy kontent */
+    .works-main {}
+    .works-top-bar { display:flex; align-items:center; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+    .works-count { font-size:0.82rem; color:var(--text-muted); }
+
+    /* Asar kartochkasi */
+    .works-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px; }
+    .work-card {
+      background:var(--bg-card); border:1px solid var(--border); border-radius:var(--border-radius);
+      overflow:hidden; cursor:pointer; transition:all var(--transition-base); position:relative;
+    }
+    .work-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, transparent, var(--gold), transparent); opacity:0; transition:opacity var(--transition-base); }
+    .work-card:hover { border-color:var(--border-hover); transform:translateY(-5px); box-shadow:var(--shadow-gold); }
+    .work-card:hover::before { opacity:1; }
+
+    .work-card-body { padding:22px 20px; }
+    .work-card-genres { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:12px; }
+    .work-icon { font-size:2rem; margin-bottom:10px; }
+    .work-title { font-family:var(--font-display); font-size:1.05rem; margin-bottom:6px; }
+    .work-author { font-size:0.82rem; color:var(--gold); margin-bottom:10px; }
+    .work-desc { font-size:0.82rem; color:var(--text-secondary); line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+    .work-card-footer { padding:12px 20px; border-top:1px solid var(--divider); display:flex; justify-content:space-between; align-items:center; }
+    .work-year { font-size:0.78rem; color:var(--text-muted); }
+
+    /* Modal — asar batafsil */
+    .work-modal { max-width:800px; }
+    .modal-work-header { padding:28px 28px 20px; border-bottom:1px solid var(--divider); display:flex; gap:20px; align-items:flex-start; }
+    .work-icon-big { font-size:2.8rem; flex-shrink:0; }
+
+    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .info-item { background:var(--bg-glass-light); border:1px solid var(--border); border-radius:var(--border-radius-sm); padding:12px; }
+    .info-label { font-size:0.7rem; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px; }
+    .info-value { font-size:0.88rem; color:var(--text-primary); font-weight:500; }
+
+    .ms-table { width:100%; border-collapse:collapse; font-size:0.83rem; }
+    .ms-table th { text-align:left; padding:8px 12px; color:var(--text-muted); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; border-bottom:1px solid var(--divider); }
+    .ms-table td { padding:10px 12px; border-bottom:1px solid var(--divider); color:var(--text-secondary); }
+    .ms-table tr:last-child td { border-bottom:none; }
+    .ms-table tr:hover td { background:var(--bg-glass-light); color:var(--text-primary); }
+
+    .condition-good    { color:#4caf8a; font-weight:500; }
+    .condition-medium  { color:var(--gold); font-weight:500; }
+    .condition-poor    { color:#e05c72; font-weight:500; }
+
+    .modal-section { padding:0 28px; margin:20px 0; }
+    .modal-section-title { font-family:var(--font-display); font-size:1rem; color:var(--gold); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+    .modal-divider { height:1px; background:var(--divider); margin:4px 28px; }
+
+    .no-results { grid-column:1/-1; text-align:center; padding:80px 0; color:var(--text-muted); }
+  </style>
+</head>
+<body data-page-key="works.title">
+  <div id="nav-container"></div>
+
+  <main class="pt-nav">
+    <!-- Hero -->
+    <section class="page-hero">
+      <div class="container">
+        <span style="font-size:3rem;display:block;margin-bottom:16px">📜</span>
+        <div class="section-label" data-i18n="works.title"></div>
+        <h1 style="font-size:clamp(2rem,4vw,3rem);margin-bottom:12px" data-i18n="works.title"></h1>
+        <p style="color:var(--text-secondary);max-width:560px;margin:0 auto 36px" data-i18n="works.desc"></p>
+
+        <!-- Yuqori qidiruv -->
+        <div style="display:flex;justify-content:center">
+          <div class="search-box" style="max-width:480px;width:100%">
+            <input type="search" id="work-search" class="search-input" data-i18n-placeholder="search.placeholder" autocomplete="off"/>
+            <span class="search-icon">🔍</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Layout -->
+    <div class="container">
+      <div class="works-layout">
+
+        <!-- Sidebar -->
+        <aside class="works-sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-title">Janr bo'yicha</div>
+            <ul class="sidebar-filter-list" id="genre-filter">
+              <li class="sidebar-filter-item active" data-filter="all">📚 Barchasi</li>
+              <li class="sidebar-filter-item" data-filter="poetry">📜 She'riyat</li>
+              <li class="sidebar-filter-item" data-filter="prose">📖 Nasr</li>
+              <li class="sidebar-filter-item" data-filter="history">📰 Tarix</li>
+              <li class="sidebar-filter-item" data-filter="science">⚗️ Ilm-fan</li>
+              <li class="sidebar-filter-item" data-filter="linguistics">🔤 Tilshunoslik</li>
+            </ul>
+          </div>
+          <div class="sidebar-section">
+            <div class="sidebar-title">Davr bo'yicha</div>
+            <ul class="sidebar-filter-list" id="period-filter">
+              <li class="sidebar-filter-item active" data-pfilter="all">📓 Barchasi</li>
+              <li class="sidebar-filter-item" data-pfilter="XI">XI asr</li>
+              <li class="sidebar-filter-item" data-pfilter="XV">XV asr</li>
+              <li class="sidebar-filter-item" data-pfilter="XVI">XVI asr</li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- Asosiy kontent -->
+        <main class="works-main">
+          <div class="works-top-bar">
+            <span class="works-count" id="works-count">Yuklanmoqda...</span>
+            <!-- Mobil uchun filtr tugmalar -->
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="btn btn-ghost btn-sm" data-mfilter="all">Barchasi</button>
+              <button class="btn btn-ghost btn-sm" data-mfilter="poetry">She'riyat</button>
+              <button class="btn btn-ghost btn-sm" data-mfilter="prose">Nasr</button>
+              <button class="btn btn-ghost btn-sm" data-mfilter="science">Ilm</button>
+            </div>
+          </div>
+          <div class="works-grid stagger-children" id="works-grid">
+            <div class="loading-overlay" style="grid-column:1/-1"><div class="spinner"></div></div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="work-modal">
+    <div class="modal work-modal" style="position:relative">
+      <button class="modal-close" id="work-modal-close" style="position:absolute;top:16px;right:16px;z-index:1">✕</button>
+      <div id="work-modal-body"></div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/supabase.js"></script>
+  <script>
+    let worksData    = [];
+    let activeGenre  = 'all';
+    let activePeriod = 'all';
+    let searchQuery  = '';
+    const genreEmoji = { poetry:'📜', prose:'📖', history:'📰', science:'⚗️', linguistics:'🔤' };
+    const badgeCls   = { gold:'badge-gold', leather:'badge-leather', ruby:'badge-ruby', emerald:'badge-emerald', sapphire:'badge-sapphire' };
+    const condClass  = { 'yaxshi':'condition-good', 'o\'rtacha':'condition-medium', 'yomon':'condition-poor' };
+
+    async function PageInit() {
+      worksData = await DataLoader.load('asarlar');
+      renderWorks();
+      initFilters();
+      initSearch();
+    }
+
+    function renderWorks() {
+      const grid = document.getElementById('works-grid');
+      const cnt  = document.getElementById('works-count');
+
+      const filtered = worksData.filter(w => {
+        if (activeGenre !== 'all' && !(w.genre || []).includes(activeGenre)) return false;
+        if (activePeriod !== 'all') {
+          const yr = (w.year_written || '').toString();
+          if (!yr.includes(activePeriod)) return false;
+        }
+        if (searchQuery) {
+          const title  = I18n.tObj(w.title || {}).toLowerCase();
+          const author = I18n.tObj(w.author_name || {}).toLowerCase();
+          if (!title.includes(searchQuery) && !author.includes(searchQuery)) return false;
+        }
+        return true;
+      });
+
+      cnt.textContent = `${filtered.length} ta asar`;
+
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="no-results"><span style="font-size:3rem">🔍</span><p style="margin-top:12px">Hech narsa topilmadi</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(w => {
+        const title  = I18n.tObj(w.title);
+        const desc   = I18n.tObj(w.description || {});
+        const author = I18n.tObj(w.author_name || {});
+        const badge  = badgeCls[w.badge] || 'badge-gold';
+        const genres = (w.genre || []).map(g => `<span class="badge badge-leather" style="font-size:0.65rem">${genreEmoji[g]||''} ${g}</span>`).join(' ');
+        const msCount = (w.manuscripts || []).length;
+
+        return `
+        <article class="work-card fade-in" onclick="openWorkModal('${w.id}')">
+          <div class="work-card-body">
+            <div class="work-card-genres">${genres}</div>
+            <div class="work-icon">📜</div>
+            <h2 class="work-title">${title}</h2>
+            <div class="work-author">✍️ ${author}</div>
+            <p class="work-desc">${desc}</p>
+          </div>
+          <div class="work-card-footer">
+            <span class="work-year">📅 ${w.year_written||''}</span>
+            <span style="font-size:0.78rem;color:var(--text-muted)">📄 ${msCount} qo'lyozma</span>
+          </div>
+        </article>`;
+      }).join('');
+
+      ScrollAnim.init();
+    }
+
+    function openWorkModal(id) {
+      const w = worksData.find(x => x.id === id);
+      if (!w) return;
+
+      const title  = I18n.tObj(w.title);
+      const desc   = I18n.tObj(w.description || {});
+      const author = I18n.tObj(w.author_name || {});
+      const hist   = I18n.tObj(w.textual_history || {});
+      const mss    = w.manuscripts || [];
+      const eds    = w.critical_editions || [];
+
+      document.getElementById('work-modal-body').innerHTML = `
+        <div class="modal-work-header">
+          <div class="work-icon-big">📜</div>
+          <div style="flex:1">
+            <h2 style="font-size:1.6rem;margin-bottom:6px">${title}</h2>
+            <p style="color:var(--gold);font-size:0.9rem;margin-bottom:4px">✍️ ${author}</p>
+            <p style="color:var(--text-muted);font-size:0.82rem;margin:0">📅 ${w.year_written||''} &nbsp;|&nbsp; 🌐 ${w.language_original||''}</p>
+          </div>
+        </div>
+
+        <div class="modal-section" style="margin-top:24px">
+          <div class="modal-section-title">📋 Asosiy ma'lumotlar</div>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Yozilgan yili</div>
+              <div class="info-value">${w.year_written||'—'}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Asl til</div>
+              <div class="info-value">${w.language_original||'—'}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Qo'lyozmalar soni</div>
+              <div class="info-value">${mss.length} ta</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Ilmiy nashrlar</div>
+              <div class="info-value">${eds.length} ta</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-divider"></div>
+
+        <div class="modal-section">
+          <div class="modal-section-title">📖 Tavsif</div>
+          <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.75">${desc}</p>
+        </div>
+        <div class="modal-divider"></div>
+
+        ${hist ? `
+        <div class="modal-section">
+          <div class="modal-section-title">🔍 Matn tarixi</div>
+          <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.75">${hist}</p>
+        </div>
+        <div class="modal-divider"></div>` : ''}
+
+        ${mss.length ? `
+        <div class="modal-section">
+          <div class="modal-section-title">📄 Qo'lyozma nusxalari</div>
+          <table class="ms-table">
+            <thead>
+              <tr>
+                <th>Joylashuv</th>
+                <th>Sana</th>
+                <th>Holat</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${mss.map(ms => `
+              <tr>
+                <td>📍 ${ms.location}</td>
+                <td>📅 ${ms.date}</td>
+                <td><span class="${condClass[ms.condition]||''}">${ms.condition}</span></td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-divider"></div>` : ''}
+
+        ${eds.length ? `
+        <div class="modal-section">
+          <div class="modal-section-title">📗 Ilmiy-tanqidiy nashrlar</div>
+          <table class="ms-table">
+            <thead>
+              <tr><th>Muharrir</th><th>Yil</th><th>Nashriyot</th></tr>
+            </thead>
+            <tbody>
+              ${eds.map(e => `
+              <tr>
+                <td>✍️ ${e.editor}</td>
+                <td>📅 ${e.year}</td>
+                <td>🏢 ${e.publisher}, ${e.city}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-divider"></div>` : ''}
+
+        <div class="modal-section" style="padding-bottom:24px">
+          <div class="modal-section-title">🔍 Tadqiqotchilar</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            ${(w.researchers||[]).map(r => `<span class="badge badge-gold">${r}</span>`).join('')}
+          </div>
+        </div>`;
+
+      Modal.open('work-modal');
+    }
+
+    function initFilters() {
+      // Sidebar janr filtri
+      document.querySelectorAll('#genre-filter .sidebar-filter-item').forEach(item => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('#genre-filter .sidebar-filter-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          activeGenre = item.dataset.filter;
+          renderWorks();
+        });
+      });
+      // Sidebar davr filtri
+      document.querySelectorAll('#period-filter .sidebar-filter-item').forEach(item => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('#period-filter .sidebar-filter-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          activePeriod = item.dataset.pfilter;
+          renderWorks();
+        });
+      });
+      // Mobil filtri
+      document.querySelectorAll('[data-mfilter]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeGenre = btn.dataset.mfilter;
+          renderWorks();
+        });
+      });
+    }
+
+    function initSearch() {
+      const input = document.getElementById('work-search');
+      if (!input) return;
+      let timer;
+      input.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { searchQuery = input.value.trim().toLowerCase(); renderWorks(); }, 300);
+      });
+    }
+
+    document.getElementById('work-modal-close').addEventListener('click', () => Modal.close('work-modal'));
+    I18n.onChange(async () => { renderWorks(); });
+  </script>
+
+  <script src="js/effects.js"></script>
+  <script src="js/ai-assistant.js"></script>
+</body>
+</html>

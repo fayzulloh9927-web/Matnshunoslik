@@ -1,0 +1,1213 @@
+﻿<!DOCTYPE html>
+<html lang="uz" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Matnshunoslik va manbashunoslik ilmidagi mualliflar, tadqiqotchilar va asarlar o'rtasidagi bog'liqliklar interaktiv tarmoq grafigi." />
+  <meta name="keywords" content="matnshunoslik tarmoq, ilmiy bog'liqliklar, mualliflar, tadqiqotchilar, asarlar, Cytoscape" />
+  <meta property="og:title" content="Tarmoq Grafigi — Matnshunoslik Platformasi" />
+  <meta property="og:description" content="Mualliflar, asarlar va tadqiqotchilar o'rtasidagi ilmiy aloqalarning interaktiv vizualizatsiyasi" />
+  <meta property="og:type" content="website" />
+  <title>Tarmoq Grafigi — Matnshunoslik Platformasi</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/extras.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚜️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Cytoscape.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+  <!-- Cola layout -->
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-cola@2.5.1/cytoscape-cola.js"></script>
+</head>
+<body data-page-key="nav.network">
+
+  <!-- Navigatsiya -->
+  <div id="nav-container"></div>
+
+  <main class="pt-nav">
+
+    <!-- ============================================================
+         HERO BO'LIMI
+         ============================================================ -->
+    <section class="trn-hero" aria-label="Tarmoq Hero">
+      <div class="trn-hero-bg" aria-hidden="true">
+        <div class="trn-hero-orb trn-orb-1"></div>
+        <div class="trn-hero-orb trn-orb-2"></div>
+      </div>
+      <div class="container">
+        <div class="trn-hero-inner">
+          <div class="trn-hero-text fade-in">
+            <div class="trn-hero-label">⚜️ <span data-i18n="nav.network">Tarmoq Grafigi</span></div>
+            <h1 class="trn-hero-title">
+              Ilmiy <span class="trn-accent">Aloqalar</span> Tarmog'i
+            </h1>
+            <p class="trn-hero-desc">
+              Mualliflar, asarlar, tadqiqotchilar va maktablar o'rtasidagi bog'liqliklarni interaktiv vizualizatsiya orqali o'rganing.
+            </p>
+          </div>
+          <div class="trn-legend fade-in">
+            <div class="trn-legend-title">Tugunlar:</div>
+            <div class="trn-legend-grid">
+              <div class="trn-legend-item">
+                <span class="trn-legend-dot" style="background:#c9a227;"></span>
+                <span>Muallif</span>
+              </div>
+              <div class="trn-legend-item">
+                <span class="trn-legend-dot" style="background:#5b9bd5;"></span>
+                <span>Tadqiqotchi</span>
+              </div>
+              <div class="trn-legend-item">
+                <span class="trn-legend-dot" style="background:#e8c84a;" style="border:2px dashed #e8c84a;"></span>
+                <span>Asar</span>
+              </div>
+              <div class="trn-legend-item">
+                <span class="trn-legend-dot" style="background:#4caf8a;border-radius:4px;"></span>
+                <span>Maktab</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         ASOSIY KONTENT: PANEL + GRAFIK
+         ============================================================ -->
+    <section class="trn-main" aria-label="Tarmoq vizualizatsiyasi">
+
+      <!-- Chap panel: nazorat -->
+      <aside class="trn-panel" id="trn-panel" aria-label="Nazorat paneli">
+
+        <!-- Layout tanlash -->
+        <div class="trn-panel-section">
+          <h3 class="trn-panel-title">
+            <span>⚙️</span> Layout
+          </h3>
+          <div class="trn-layout-btns">
+            <button class="trn-layout-btn active" data-layout="cola" id="layout-cola" title="Kuch asosidagi">
+              <span>🌐</span> Cola
+            </button>
+            <button class="trn-layout-btn" data-layout="cose" id="layout-cose" title="Compound spring embedder">
+              <span>🔮</span> Cose
+            </button>
+            <button class="trn-layout-btn" data-layout="circle" id="layout-circle" title="Doiraviy">
+              <span>⭕</span> Circle
+            </button>
+            <button class="trn-layout-btn" data-layout="breadthfirst" id="layout-breadthfirst" title="Ierarxik">
+              <span>🌲</span> Tree
+            </button>
+          </div>
+        </div>
+
+        <!-- Munosabat filtrlari -->
+        <div class="trn-panel-section">
+          <h3 class="trn-panel-title">
+            <span>🔗</span> Munosabatlar
+          </h3>
+          <div class="trn-edge-filters">
+            <label class="trn-check-label" id="check-authored">
+              <input type="checkbox" checked data-edge-type="authored" id="cb-authored" />
+              <span class="trn-check-box" style="--c:#c9a227"></span>
+              <span class="trn-check-dot" style="background:#c9a227"></span>
+              Muallif
+            </label>
+            <label class="trn-check-label" id="check-researched">
+              <input type="checkbox" checked data-edge-type="researched" id="cb-researched" />
+              <span class="trn-check-box" style="--c:#5b9bd5"></span>
+              <span class="trn-check-dot" style="background:#5b9bd5"></span>
+              Tadqiq qilgan
+            </label>
+            <label class="trn-check-label" id="check-collaboration">
+              <input type="checkbox" checked data-edge-type="collaboration" id="cb-collaboration" />
+              <span class="trn-check-box" style="--c:#4caf8a"></span>
+              <span class="trn-check-dot" style="background:#4caf8a"></span>
+              Hamkorlik
+            </label>
+            <label class="trn-check-label" id="check-mentor">
+              <input type="checkbox" checked data-edge-type="mentor" id="cb-mentor" />
+              <span class="trn-check-box" style="--c:#b06fd8"></span>
+              <span class="trn-check-dot" style="background:#b06fd8"></span>
+              Ustoz-shogird
+            </label>
+            <label class="trn-check-label" id="check-polemic">
+              <input type="checkbox" checked data-edge-type="polemic" id="cb-polemic" />
+              <span class="trn-check-box" style="--c:#e05c72"></span>
+              <span class="trn-check-dot" style="background:#e05c72"></span>
+              Ilmiy munozara
+            </label>
+            <label class="trn-check-label" id="check-belongs">
+              <input type="checkbox" checked data-edge-type="belongs" id="cb-belongs" />
+              <span class="trn-check-box" style="--c:#b07d52"></span>
+              <span class="trn-check-dot" style="background:#b07d52"></span>
+              A'zolik
+            </label>
+            <label class="trn-check-label" id="check-influence">
+              <input type="checkbox" checked data-edge-type="influence" id="cb-influence" />
+              <span class="trn-check-box" style="--c:#e8c84a"></span>
+              <span class="trn-check-dot" style="background:#e8c84a"></span>
+              Ta'sir
+            </label>
+          </div>
+        </div>
+
+        <!-- Zoom nazorati -->
+        <div class="trn-panel-section">
+          <h3 class="trn-panel-title">
+            <span>🔍</span> Zoom
+          </h3>
+          <div class="trn-zoom-btns">
+            <button class="trn-ctrl-btn" id="zoom-in" title="Kattalashtirish">＋</button>
+            <button class="trn-ctrl-btn" id="zoom-out" title="Kichraytirish">－</button>
+            <button class="trn-ctrl-btn" id="fit-btn" title="Moslashtirish">⊡</button>
+            <button class="trn-ctrl-btn trn-reset-btn" id="reset-btn" title="Qayta yuklash">↺</button>
+          </div>
+        </div>
+
+        <!-- Tugunlar -->
+        <div class="trn-panel-section">
+          <h3 class="trn-panel-title">
+            <span>📋</span> Statistika
+          </h3>
+          <div class="trn-stats-mini">
+            <div class="trn-stat-row">
+              <span class="trn-stat-label-mini">Tugunlar:</span>
+              <span class="trn-stat-val" id="stat-nodes">—</span>
+            </div>
+            <div class="trn-stat-row">
+              <span class="trn-stat-label-mini">Bog'liqliklar:</span>
+              <span class="trn-stat-val" id="stat-edges">—</span>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- Grafik kanvasi -->
+      <div class="trn-canvas-wrapper" role="img" aria-label="Tarmoq grafigi">
+        <div id="cy" class="trn-cy-container"></div>
+
+        <!-- Yuklanish -->
+        <div class="trn-cy-loading" id="trn-cy-loading">
+          <div class="trn-cy-spinner"></div>
+          <span>Grafik yuklanmoqda...</span>
+        </div>
+
+        <!-- Info panel -->
+        <div class="trn-info-panel" id="trn-info-panel" aria-live="polite">
+          <div class="trn-info-header">
+            <div class="trn-info-icon" id="info-icon">👤</div>
+            <div>
+              <div class="trn-info-name" id="info-name">—</div>
+              <div class="trn-info-type" id="info-type">—</div>
+            </div>
+            <button class="trn-info-close" id="info-close" title="Yopish">✕</button>
+          </div>
+          <div class="trn-info-body">
+            <div class="trn-info-row">
+              <span class="trn-info-lbl">Davr:</span>
+              <span class="trn-info-val" id="info-era">—</span>
+            </div>
+            <div class="trn-info-row">
+              <span class="trn-info-lbl">ID:</span>
+              <span class="trn-info-val" id="info-id" style="font-size:0.72rem;color:var(--text-muted)">—</span>
+            </div>
+            <div class="trn-info-connections" id="info-connections">
+              <div class="trn-info-lbl" style="margin-bottom:8px">Bog'liqliklar:</div>
+              <div id="info-conn-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Maslahat -->
+        <div class="trn-tip" id="trn-tip">
+          💡 Tugunni bosing — batafsil ma'lumot | Sichqoncha g'ildiragi — zoom | Drag — ko'chirish
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <div id="footer-container"></div>
+
+  <!-- Skriptlar -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/supabase.js"></script>
+  <script>
+    // ============================================================
+    // TARMOQ GRAFIGI — ASOSIY MANTIQ
+    // ============================================================
+
+    let cy = null;
+    let allEdgeData = [];
+
+    // Edge ranglari (munosabat turi bo'yicha)
+    const EDGE_COLORS = {
+      authored:      '#c9a227',
+      researched:    '#5b9bd5',
+      collaboration: '#4caf8a',
+      mentor:        '#b06fd8',
+      polemic:       '#e05c72',
+      belongs:       '#b07d52',
+      influence:     '#e8c84a'
+    };
+
+    // Tugun belgilari
+    const NODE_ICONS = {
+      author:     '✒️',
+      researcher: '🔍',
+      work:       '📜',
+      school:     '🏛️'
+    };
+
+    // Tugun shakllari
+    const NODE_SHAPES = {
+      author:     'ellipse',
+      researcher: 'ellipse',
+      work:       'round-diamond',
+      school:     'round-rectangle'
+    };
+
+    // ============================================================
+    // CYTOSCAPE SOZLAMALAR
+    // ============================================================
+    function buildCyStyle() {
+      return [
+        {
+          selector: 'node',
+          style: {
+            'background-color': 'data(color)',
+            'label': 'data(label)',
+            'color': '#2c1a0a',
+            'font-size': '10px',
+            'font-family': 'EB Garamond, Georgia, serif',
+            'text-valign': 'bottom',
+            'text-margin-y': '6px',
+            'text-wrap': 'wrap',
+            'text-max-width': '80px',
+            'width': 'data(size)',
+            'height': 'data(size)',
+            'shape': (ele) => NODE_SHAPES[ele.data('type')] || 'ellipse',
+            'border-width': '2px',
+            'border-color': (ele) => ele.data('color'),
+            'border-opacity': '0.6',
+            'background-opacity': '0.85',
+            'overlay-opacity': 0,
+            'text-background-opacity': 0.7,
+            'text-background-color': '#fdfaf2',
+            'text-background-padding': '3px',
+            'text-background-shape': 'round-rectangle',
+            'transition-property': 'border-width, border-color, opacity, width, height',
+            'transition-duration': '0.2s'
+          }
+        },
+        {
+          selector: 'node:selected',
+          style: {
+            'border-width': '3px',
+            'border-color': '#e8c84a',
+            'border-opacity': 1,
+            'background-opacity': 1,
+            'font-size': '11px',
+            'font-weight': '600',
+            'width': (ele) => ele.data('size') * 1.2,
+            'height': (ele) => ele.data('size') * 1.2,
+          }
+        },
+        {
+          selector: 'node.highlighted',
+          style: {
+            'border-width': '2.5px',
+            'border-opacity': 1,
+            'background-opacity': 1,
+            'opacity': 1
+          }
+        },
+        {
+          selector: 'node.dimmed',
+          style: { 'opacity': '0.2' }
+        },
+        {
+          selector: 'edge',
+          style: {
+            'width': 1.5,
+            'line-color': (ele) => EDGE_COLORS[ele.data('type')] || '#c9a227',
+            'target-arrow-color': (ele) => EDGE_COLORS[ele.data('type')] || '#c9a227',
+            'target-arrow-shape': 'triangle',
+            'curve-style': 'bezier',
+            'arrow-scale': 0.8,
+            'opacity': 0.55,
+            'label': 'data(label)',
+            'font-size': '8px',
+            'color': '#4a3220',
+            'text-rotation': 'autorotate',
+            'text-margin-y': '-8px',
+            'font-family': 'Inter, sans-serif',
+            'text-background-opacity': 0.7,
+            'text-background-color': '#fdfaf2',
+            'text-background-padding': '2px',
+            'text-background-shape': 'round-rectangle',
+            'transition-property': 'opacity, width',
+            'transition-duration': '0.2s',
+            'overlay-opacity': 0
+          }
+        },
+        {
+          selector: 'edge.highlighted',
+          style: {
+            'opacity': 1,
+            'width': 2.5,
+            'font-size': '9px',
+            'color': '#a89f8c'
+          }
+        },
+        {
+          selector: 'edge.dimmed',
+          style: { 'opacity': '0.05' }
+        }
+      ];
+    }
+
+    // ============================================================
+    // LAYOUT OLISH
+    // ============================================================
+    function getLayout(name) {
+      const layouts = {
+        cola: {
+          name: 'cola',
+          animate: true,
+          animationDuration: 800,
+          randomize: false,
+          nodeRepulsion: 4000,
+          idealEdgeLength: 120,
+          edgeElasticity: 0.45,
+          gravity: 0.25,
+          padding: 40,
+          nodeDimensionsIncludeLabels: true
+        },
+        cose: {
+          name: 'cose',
+          animate: true,
+          animationDuration: 800,
+          randomize: false,
+          nodeRepulsion: 8000,
+          idealEdgeLength: 120,
+          gravity: 0.8,
+          padding: 40,
+          nodeDimensionsIncludeLabels: true
+        },
+        circle: {
+          name: 'circle',
+          animate: true,
+          animationDuration: 600,
+          padding: 40,
+          avoidOverlap: true,
+          nodeDimensionsIncludeLabels: true
+        },
+        breadthfirst: {
+          name: 'breadthfirst',
+          animate: true,
+          animationDuration: 600,
+          directed: false,
+          padding: 40,
+          spacingFactor: 1.2,
+          avoidOverlap: true,
+          nodeDimensionsIncludeLabels: true
+        }
+      };
+      return layouts[name] || layouts.cose;
+    }
+
+    // ============================================================
+    // INFO PANEL
+    // ============================================================
+    function showInfoPanel(node) {
+      const data = node.data();
+      const panel = document.getElementById('trn-info-panel');
+
+      document.getElementById('info-icon').textContent = NODE_ICONS[data.type] || '🔵';
+      document.getElementById('info-name').textContent = data.label;
+      document.getElementById('info-type').textContent = data.type || '';
+      document.getElementById('info-era').textContent  = data.era  || '—';
+      document.getElementById('info-id').textContent   = data.id   || '—';
+
+      // Bog'liqliklar
+      const connList = document.getElementById('info-conn-list');
+      const connectedEdges = node.connectedEdges();
+      if (connectedEdges.length === 0) {
+        connList.innerHTML = '<span style="color:var(--text-muted);font-size:0.78rem">Bog\'liqlik topilmadi</span>';
+      } else {
+        connList.innerHTML = connectedEdges.map(edge => {
+          const isSource = edge.data('source') === data.id;
+          const otherNode = isSource ? edge.target() : edge.source();
+          const otherLabel = otherNode.data('label') || otherNode.data('id');
+          const edgeColor = EDGE_COLORS[edge.data('type')] || '#c9a227';
+          const arrow = isSource ? '→' : '←';
+          return `
+            <div class="trn-conn-item">
+              <span style="color:${edgeColor};font-size:0.75rem;font-weight:600">${edge.data('label') || edge.data('type')} ${arrow}</span>
+              <span class="trn-conn-name">${otherLabel}</span>
+            </div>`;
+        }).join('');
+      }
+
+      panel.classList.add('visible');
+    }
+
+    function hideInfoPanel() {
+      document.getElementById('trn-info-panel').classList.remove('visible');
+    }
+
+    // ============================================================
+    // HOVER EFFEKTLARI
+    // ============================================================
+    function setupHoverEffects() {
+      cy.on('mouseover', 'node', (e) => {
+        const node = e.target;
+        cy.elements().addClass('dimmed');
+        node.removeClass('dimmed').addClass('highlighted');
+        node.connectedEdges().removeClass('dimmed').addClass('highlighted');
+        node.connectedEdges().connectedNodes().removeClass('dimmed').addClass('highlighted');
+        document.getElementById('cy').style.cursor = 'pointer';
+      });
+
+      cy.on('mouseout', 'node', () => {
+        cy.elements().removeClass('dimmed highlighted');
+        document.getElementById('cy').style.cursor = 'default';
+      });
+
+      cy.on('mouseover', 'edge', (e) => {
+        const edge = e.target;
+        cy.elements().addClass('dimmed');
+        edge.removeClass('dimmed').addClass('highlighted');
+        edge.connectedNodes().removeClass('dimmed').addClass('highlighted');
+      });
+
+      cy.on('mouseout', 'edge', () => {
+        cy.elements().removeClass('dimmed highlighted');
+      });
+    }
+
+    // ============================================================
+    // EDGE FILTRLASH
+    // ============================================================
+    function updateEdgeVisibility() {
+      const activeTypes = new Set(
+        Array.from(document.querySelectorAll('[data-edge-type]'))
+          .filter(cb => cb.checked)
+          .map(cb => cb.dataset.edgeType)
+      );
+
+      cy.edges().forEach(edge => {
+        if (activeTypes.has(edge.data('type'))) {
+          edge.style('display', 'element');
+        } else {
+          edge.style('display', 'none');
+        }
+      });
+    }
+
+    // ============================================================
+    // CYTOSCAPE ISHGA TUSHIRISH
+    // ============================================================
+    async function initCytoscape(data) {
+      const loading = document.getElementById('trn-cy-loading');
+
+      // Cola layout tekshirish
+      let defaultLayout = 'cose';
+      if (typeof cytoscapeCola !== 'undefined') {
+        try {
+          cytoscape.use(cytoscapeCola);
+          defaultLayout = 'cola';
+        } catch(e) {
+          console.warn('[Tarmoq] Cola layout o\'rnatilmadi, cose ishlatiladi');
+        }
+      }
+
+      // Elementlarni tayyorlash
+      const elements = [
+        ...data.nodes.map(n => ({ data: n })),
+        ...data.edges.map((e, i) => ({
+          data: { ...e, id: `edge-${i}` }
+        }))
+      ];
+
+      // Cytoscape yaratish
+      cy = cytoscape({
+        container: document.getElementById('cy'),
+        elements,
+        style: buildCyStyle(),
+        layout: getLayout(defaultLayout),
+        minZoom: 0.2,
+        maxZoom: 4,
+        wheelSensitivity: 0.3,
+        boxSelectionEnabled: false,
+        autounselectify: false
+      });
+
+      // Statistika
+      document.getElementById('stat-nodes').textContent = data.nodes.length;
+      document.getElementById('stat-edges').textContent = data.edges.length;
+      allEdgeData = data.edges;
+
+      // Loading yashirish
+      if (loading) loading.style.display = 'none';
+
+      // Hover effektlari
+      setupHoverEffects();
+
+      // Tugunni bosish
+      cy.on('tap', 'node', (e) => {
+        showInfoPanel(e.target);
+      });
+
+      // Bo'sh joyni bosish
+      cy.on('tap', (e) => {
+        if (e.target === cy) {
+          hideInfoPanel();
+          cy.elements().removeClass('dimmed highlighted');
+        }
+      });
+
+      // Aktiv layout tugmasini belgilash
+      document.querySelectorAll('.trn-layout-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.layout === defaultLayout);
+      });
+
+      return defaultLayout;
+    }
+
+    // ============================================================
+    // NAZORAT TUGMALARI
+    // ============================================================
+    function setupControls(currentLayout) {
+      // Zoom tugmalari
+      document.getElementById('zoom-in').addEventListener('click', () => {
+        cy.animate({ zoom: cy.zoom() * 1.3, duration: 200 });
+      });
+
+      document.getElementById('zoom-out').addEventListener('click', () => {
+        cy.animate({ zoom: cy.zoom() * 0.77, duration: 200 });
+      });
+
+      document.getElementById('fit-btn').addEventListener('click', () => {
+        cy.animate({ fit: { padding: 40 }, duration: 400 });
+      });
+
+      document.getElementById('reset-btn').addEventListener('click', () => {
+        hideInfoPanel();
+        cy.elements().removeClass('dimmed highlighted selected');
+        cy.animate({ fit: { padding: 40 }, duration: 400 });
+      });
+
+      // Layout tanlash
+      document.querySelectorAll('.trn-layout-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.trn-layout-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const layout = getLayout(btn.dataset.layout);
+          cy.layout(layout).run();
+        });
+      });
+
+      // Edge filtrlari
+      document.querySelectorAll('[data-edge-type]').forEach(cb => {
+        cb.addEventListener('change', updateEdgeVisibility);
+      });
+
+      // Info panel yopish
+      document.getElementById('info-close').addEventListener('click', hideInfoPanel);
+    }
+
+    // ============================================================
+    // SAHIFAGA XOS ISHGA TUSHIRISH
+    // ============================================================
+    async function PageInit() {
+      try {
+        const data = await DataLoader.load('tarmoq');
+        const layout = await initCytoscape(data);
+        setupControls(layout);
+
+        // Tip yashirish
+        setTimeout(() => {
+          const tip = document.getElementById('trn-tip');
+          if (tip) tip.style.opacity = '0';
+        }, 5000);
+
+      } catch (e) {
+        console.error('[Tarmoq] Yuklanmadi', e);
+        const loading = document.getElementById('trn-cy-loading');
+        if (loading) {
+          loading.innerHTML = `
+            <span style="font-size:2rem">⚠️</span>
+            <span>Grafik yuklanmadi. Qaytadan urinib ko'ring.</span>`;
+        }
+      }
+    }
+
+    // i18n o'zgarganda
+    I18n.onChange(() => {
+      // Info panel ni yopish
+      hideInfoPanel();
+    });
+  </script>
+
+  <style>
+    /* ===================================================
+       TARMOQ HERO
+       =================================================== */
+    .trn-hero {
+      position: relative;
+      padding: 100px 0 48px;
+      overflow: hidden;
+    }
+
+    .trn-hero-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .trn-hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+    }
+
+    .trn-orb-1 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(201,162,39,0.1), transparent 70%);
+      top: -100px; left: -50px;
+      animation: float 9s ease-in-out infinite;
+    }
+
+    .trn-orb-2 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(91,155,213,0.08), transparent 70%);
+      bottom: -50px; right: 10%;
+      animation: float 7s ease-in-out 2s infinite reverse;
+    }
+
+    .trn-hero-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .trn-hero-text { flex: 1; min-width: 280px; }
+
+    .trn-hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      padding: 5px 14px;
+      background: var(--gold-glow);
+      border: 1px solid rgba(201,162,39,0.3);
+      border-radius: 100px;
+    }
+
+    .trn-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 14px;
+      color: var(--text-primary);
+    }
+
+    .trn-accent {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .trn-hero-desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      max-width: 480px;
+    }
+
+    /* Legend */
+    .trn-legend {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      padding: 16px 20px;
+      flex-shrink: 0;
+    }
+
+    .trn-legend-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .trn-legend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+    }
+
+    .trn-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .trn-legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ===================================================
+       ASOSIY KONTENT LAYOUT
+       =================================================== */
+    .trn-main {
+      display: flex;
+      height: calc(100vh - var(--nav-height) - 200px);
+      min-height: 560px;
+      max-height: 800px;
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ===================================================
+       PANEL
+       =================================================== */
+    .trn-panel {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--bg-primary);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .trn-panel::-webkit-scrollbar { width: 4px; }
+    .trn-panel::-webkit-scrollbar-track { background: transparent; }
+    .trn-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .trn-panel-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      padding: 14px;
+      margin-bottom: 8px;
+    }
+
+    .trn-panel-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Layout tugmalari */
+    .trn-layout-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .trn-layout-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      font-size: 0.76rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-body);
+    }
+
+    .trn-layout-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+    }
+
+    .trn-layout-btn.active {
+      border-color: var(--gold);
+      background: var(--gold-glow);
+      color: var(--gold);
+    }
+
+    /* Checkbox filtrlari */
+    .trn-edge-filters {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .trn-check-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+      user-select: none;
+    }
+
+    .trn-check-label:hover { color: var(--text-primary); }
+
+    .trn-check-label input[type="checkbox"] { display: none; }
+
+    .trn-check-box {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1.5px solid var(--c, var(--gold));
+      flex-shrink: 0;
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .trn-check-label input:checked + .trn-check-box {
+      background: var(--c, var(--gold));
+    }
+
+    .trn-check-label input:checked + .trn-check-box::after {
+      content: '✓';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0d0c15;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .trn-check-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Zoom tugmalari */
+    .trn-zoom-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .trn-ctrl-btn {
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-body);
+      line-height: 1;
+    }
+
+    .trn-ctrl-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+      background: var(--bg-card-hover);
+    }
+
+    .trn-reset-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* Mini statistika */
+    .trn-stats-mini { display: flex; flex-direction: column; gap: 5px; }
+
+    .trn-stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .trn-stat-label-mini { color: var(--text-muted); }
+    .trn-stat-val { color: var(--gold); font-weight: 600; }
+
+    /* ===================================================
+       CYTOSCAPE KANVASI
+       =================================================== */
+    .trn-canvas-wrapper {
+      flex: 1;
+      position: relative;
+      background: var(--bg-deep);
+      overflow: hidden;
+    }
+
+    #cy {
+      width: 100%;
+      height: 100%;
+      background: var(--bg-deep);
+    }
+
+    /* Yuklanish overlay */
+    .trn-cy-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background: var(--bg-deep);
+      color: var(--text-muted);
+      z-index: 10;
+    }
+
+    .trn-cy-spinner {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold);
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Maslahat xabari */
+    .trn-tip {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13,12,21,0.9);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+      transition: opacity 1s ease;
+    }
+
+    /* ===================================================
+       INFO PANEL (quyi o'ng)
+       =================================================== */
+    .trn-info-panel {
+      position: absolute;
+      bottom: 48px;
+      right: 16px;
+      width: 280px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-hover);
+      border-radius: var(--border-radius);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,162,39,0.1);
+      overflow: hidden;
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+      z-index: 20;
+    }
+
+    .trn-info-panel.visible {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .trn-info-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      background: rgba(201,162,39,0.08);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .trn-info-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .trn-info-name {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .trn-info-type {
+      font-size: 0.7rem;
+      color: var(--gold);
+      text-transform: capitalize;
+      letter-spacing: 0.05em;
+    }
+
+    .trn-info-close {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 4px;
+      border-radius: 4px;
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .trn-info-close:hover { color: var(--text-primary); }
+
+    .trn-info-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .trn-info-body::-webkit-scrollbar { width: 3px; }
+    .trn-info-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .trn-info-row {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .trn-info-lbl {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      letter-spacing: 0.04em;
+    }
+
+    .trn-info-val {
+      font-size: 0.82rem;
+      color: var(--text-primary);
+    }
+
+    .trn-info-connections {
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: 4px;
+    }
+
+    .trn-conn-item {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      margin-bottom: 7px;
+    }
+
+    .trn-conn-name {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===================================================
+       MOBIL RESPONSIV
+       =================================================== */
+    @media (max-width: 768px) {
+      .trn-main {
+        flex-direction: column;
+        height: auto;
+        max-height: none;
+      }
+
+      .trn-panel {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 12px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: visible;
+      }
+
+      .trn-panel-section {
+        flex: 1;
+        min-width: 160px;
+        margin-bottom: 0;
+      }
+
+      .trn-canvas-wrapper {
+        height: 55vh;
+        min-height: 320px;
+      }
+
+      .trn-info-panel {
+        width: calc(100% - 32px);
+        bottom: 56px;
+        right: 16px;
+      }
+
+      .trn-hero-inner { flex-direction: column; }
+      .trn-legend { width: 100%; }
+      .trn-legend-grid { grid-template-columns: repeat(4, 1fr); }
+
+      .trn-tip { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .trn-legend-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ===================================================
+       FADE-IN
+       =================================================== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+
+
+  <script src="js/effects.js"></script>
+  <script src="js/ai-assistant.js"></script>
+</body>
+</html>

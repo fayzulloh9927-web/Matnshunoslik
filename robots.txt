@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /js/supabase.js
+Disallow: /js/auth.js
+Disallow: /.well-known/
+
+Sitemap: https://matnshunoslik.uz/sitemap.xml

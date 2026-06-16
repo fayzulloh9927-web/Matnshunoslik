@@ -1,0 +1,832 @@
+﻿<!DOCTYPE html>
+<html lang="uz" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Matnshunoslik va manbashunoslik ilmining tarixiy xronologiyasi. Qadimgi davrdan hozirgi zamonga qadar muhim voqealar va kashfiyotlar." />
+  <meta name="keywords" content="matnshunoslik xronologiya, tarix, qadimgi matnlar, o'zbek adabiyoti tarixi, Navoiy, Beruniy" />
+  <meta property="og:title" content="Xronologiya — Matnshunoslik Platformasi" />
+  <meta property="og:description" content="Matnshunoslik ilmining ming yillik tarixi — interaktiv xronologiya" />
+  <meta property="og:type" content="website" />
+  <title>Xronologiya — Matnshunoslik Platformasi</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/extras.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕰️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body data-page-key="nav.timeline">
+
+  <!-- Navigatsiya -->
+  <div id="nav-container"></div>
+
+  <main class="pt-nav">
+
+    <!-- ============================================================
+         HERO BO'LIMI
+         ============================================================ -->
+    <section class="xron-hero" aria-label="Xronologiya Hero">
+      <div class="xron-hero-bg" aria-hidden="true">
+        <div class="xron-orb xron-orb-1"></div>
+        <div class="xron-orb xron-orb-2"></div>
+        <div class="xron-orb xron-orb-3"></div>
+      </div>
+      <div class="container">
+        <div class="xron-hero-inner fade-in">
+          <div class="xron-hero-icon">🕰️</div>
+          <div class="xron-hero-label" data-i18n="nav.timeline"></div>
+          <h1 class="xron-hero-title">
+            <span data-i18n="timeline.hero_title">Matnshunoslik</span>
+            <span class="xron-hero-accent">Xronologiyasi</span>
+          </h1>
+          <p class="xron-hero-desc" data-i18n="timeline.hero_desc">
+            Qadimgi davrdan hozirgi zamonga qadar matnshunoslik ilmining tarixiy yo'li — muhim voqealar, kashfiyotlar va ilmiy yutuqlar xronologiyasi.
+          </p>
+          <!-- Statistika -->
+          <div class="xron-stats">
+            <div class="xron-stat-item">
+              <span class="xron-stat-num" id="stat-total">14</span>
+              <span class="xron-stat-label">Voqea</span>
+            </div>
+            <div class="xron-stat-divider">|</div>
+            <div class="xron-stat-item">
+              <span class="xron-stat-num">2400+</span>
+              <span class="xron-stat-label">Yil</span>
+            </div>
+            <div class="xron-stat-divider">|</div>
+            <div class="xron-stat-item">
+              <span class="xron-stat-num">4</span>
+              <span class="xron-stat-label">Davr</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         DAVR FILTRLARI
+         ============================================================ -->
+    <section class="xron-filters-section" aria-label="Davr filtrlari">
+      <div class="container">
+        <div class="xron-filters" id="xron-filters" role="group" aria-label="Davrlar bo'yicha filtr">
+          <button class="xron-filter-btn active" data-period="all" id="filter-all">
+            <span class="filter-icon">✦</span>
+            <span data-i18n="timeline.filter_all">Barchasi</span>
+          </button>
+          <button class="xron-filter-btn" data-period="ancient" id="filter-ancient">
+            <span class="filter-icon period-ancient-icon">📜</span>
+            <span data-i18n="timeline.filter_ancient">Qadimgi davr</span>
+          </button>
+          <button class="xron-filter-btn" data-period="medieval" id="filter-medieval">
+            <span class="filter-icon period-medieval-icon">⭐</span>
+            <span data-i18n="timeline.filter_medieval">O'rta asrlar</span>
+          </button>
+          <button class="xron-filter-btn" data-period="modern" id="filter-modern">
+            <span class="filter-icon period-modern-icon">🌍</span>
+            <span data-i18n="timeline.filter_modern">Yangi davr</span>
+          </button>
+          <button class="xron-filter-btn" data-period="contemporary" id="filter-contemporary">
+            <span class="filter-icon period-contemporary-icon">💡</span>
+            <span data-i18n="timeline.filter_contemporary">Hozirgi zamon</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         TIMELINE
+         ============================================================ -->
+    <section class="xron-timeline-section" aria-label="Xronologiya">
+      <div class="container">
+        <div class="xron-timeline" id="xron-timeline" role="list">
+          <!-- JS bilan to'ldiriladi -->
+          <div class="xron-loading" id="xron-loading">
+            <div class="xron-spinner"></div>
+            <span>Yuklanmoqda...</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <div id="footer-container"></div>
+
+  <!-- Skriptlar -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/supabase.js"></script>
+  <script>
+    // ============================================================
+    // XRONOLOGIYA SAHIFASI — ASOSIY MANTIQ
+    // ============================================================
+
+    const PERIOD_META = {
+      ancient:      { label: 'Qadimgi davr',   labelKey: 'timeline.period_ancient',      icon: '📜', color: '#b07d52', glow: 'rgba(176,125,82,0.25)'  },
+      medieval:     { label: "O'rta asrlar",    labelKey: 'timeline.period_medieval',     icon: '⭐', color: '#c9a227', glow: 'rgba(201,162,39,0.25)'  },
+      modern:       { label: 'Yangi davr',      labelKey: 'timeline.period_modern',       icon: '🌍', color: '#5b9bd5', glow: 'rgba(91,155,213,0.25)'  },
+      contemporary: { label: 'Hozirgi zamon',   labelKey: 'timeline.period_contemporary', icon: '💡', color: '#4caf8a', glow: 'rgba(76,175,138,0.25)'  }
+    };
+
+    const COLOR_MAP = {
+      gold:     { border: '#c9a227', bg: 'rgba(201,162,39,0.12)',  badge: '#c9a227' },
+      leather:  { border: '#b07d52', bg: 'rgba(176,125,82,0.12)',  badge: '#b07d52' },
+      ruby:     { border: '#e05c72', bg: 'rgba(224,92,114,0.12)',  badge: '#e05c72' },
+      emerald:  { border: '#4caf8a', bg: 'rgba(76,175,138,0.12)', badge: '#4caf8a' },
+      sapphire: { border: '#5b9bd5', bg: 'rgba(91,155,213,0.12)', badge: '#5b9bd5' },
+      amethyst: { border: '#b06fd8', bg: 'rgba(176,111,216,0.12)',badge: '#b06fd8' }
+    };
+
+    let allData = [];
+    let activeFilter = 'all';
+
+    // Yil formatlash
+    function formatYear(year) {
+      if (year < 0) return `${Math.abs(year)} BC`;
+      return `${year}`;
+    }
+
+    // Davr bo'luvchi yaratish
+    function createPeriodDivider(period) {
+      const meta = PERIOD_META[period] || {};
+      const label = I18n.t(meta.labelKey) || meta.label || period;
+      return `
+        <div class="xron-period-divider" data-period="${period}">
+          <div class="period-divider-line"></div>
+          <div class="period-divider-badge" style="border-color:${meta.color};color:${meta.color};">
+            <span>${meta.icon}</span>
+            <span>${label}</span>
+          </div>
+          <div class="period-divider-line"></div>
+        </div>`;
+    }
+
+    // Bir timeline element yaratish
+    function createTimelineItem(item, index) {
+      const isEven = index % 2 === 0;
+      const color = COLOR_MAP[item.color] || COLOR_MAP.gold;
+      const title = I18n.tObj(item.title);
+      const desc  = I18n.tObj(item.desc);
+      const year  = formatYear(item.year);
+
+      return `
+        <div class="xron-item ${isEven ? 'xron-item-left' : 'xron-item-right'} fade-in"
+             data-period="${item.period}"
+             data-id="${item.id}"
+             role="listitem"
+             aria-label="${year} — ${title}">
+
+          <!-- Markaziy tugun -->
+          <div class="xron-node" style="background:${color.border};box-shadow:0 0 0 4px ${item.color === 'gold' ? 'rgba(201,162,39,0.2)' : color.bg};">
+            <span class="xron-node-icon">${item.icon}</span>
+          </div>
+
+          <!-- Karta -->
+          <div class="xron-card" style="border-color:${color.border};--card-glow:${color.bg};">
+            <div class="xron-card-inner">
+              <!-- Yil badge -->
+              <div class="xron-year-badge" style="color:${color.border};border-color:${color.border};background:${color.bg};">
+                <span class="xron-year-icon">📅</span>
+                <span class="xron-year-text">${year}</span>
+              </div>
+
+              <!-- Sarlavha -->
+              <h2 class="xron-card-title">${title}</h2>
+
+              <!-- Tavsif -->
+              <p class="xron-card-desc">${desc}</p>
+
+              <!-- Davr tegi -->
+              <div class="xron-card-footer">
+                <span class="xron-period-tag" style="color:${PERIOD_META[item.period]?.color || '#c9a227'};">
+                  ${PERIOD_META[item.period]?.icon || ''} ${I18n.t(PERIOD_META[item.period]?.labelKey) || item.period}
+                </span>
+              </div>
+            </div>
+            <!-- Chiziq (kartadan markazga) -->
+            <div class="xron-connector" style="background:${color.border};"></div>
+          </div>
+        </div>`;
+    }
+
+    // Timeline render
+    function renderTimeline(data) {
+      const container = document.getElementById('xron-timeline');
+      if (!container) return;
+
+      const filtered = activeFilter === 'all'
+        ? data
+        : data.filter(d => d.period === activeFilter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="xron-empty">
+            <span style="font-size:3rem">🔍</span>
+            <p>Ushbu davr bo'yicha ma'lumot topilmadi</p>
+          </div>`;
+        return;
+      }
+
+      // Davrlarni guruhlash
+      let html = '';
+      let lastPeriod = null;
+      let itemIndex = 0;
+
+      filtered.forEach(item => {
+        if (item.period !== lastPeriod) {
+          html += createPeriodDivider(item.period);
+          lastPeriod = item.period;
+        }
+        html += createTimelineItem(item, itemIndex);
+        itemIndex++;
+      });
+
+      // Vertikal chiziq
+      container.innerHTML = `
+        <div class="xron-line" aria-hidden="true">
+          <div class="xron-line-inner"></div>
+        </div>
+        ${html}`;
+
+      // Scroll animatsiyalar
+      ScrollAnim.init();
+
+      // Stat yangilash
+      document.getElementById('stat-total').textContent = filtered.length;
+    }
+
+    // Filtr hodisalari
+    function setupFilters() {
+      document.querySelectorAll('.xron-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.xron-filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeFilter = btn.dataset.period;
+
+          // Yumshoq o'tish animatsiyasi
+          const container = document.getElementById('xron-timeline');
+          container.style.opacity = '0';
+          container.style.transform = 'translateY(10px)';
+          setTimeout(() => {
+            renderTimeline(allData);
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+          }, 200);
+        });
+      });
+    }
+
+    // ============================================================
+    // SAHIFAGA XOS ISHGA TUSHIRISH
+    // ============================================================
+    async function PageInit() {
+      // Ma'lumotlarni yuklash
+      try {
+        allData = await DataLoader.load('xronologiya');
+        allData.sort((a, b) => a.year - b.year);
+
+        // Loading yashirish
+        const loading = document.getElementById('xron-loading');
+        if (loading) loading.remove();
+
+        renderTimeline(allData);
+        setupFilters();
+
+      } catch (e) {
+        console.error('[Xronologiya] Yuklanmadi', e);
+        const container = document.getElementById('xron-timeline');
+        if (container) {
+          container.innerHTML = `
+            <div class="xron-empty">
+              <span style="font-size:3rem">⚠️</span>
+              <p>Ma'lumotlar yuklanmadi. Qaytadan urinib ko'ring.</p>
+            </div>`;
+        }
+      }
+    }
+
+    // i18n o'zgarganda
+    I18n.onChange(() => {
+      renderTimeline(allData);
+      // Filtr tugmalarini yangilash
+      document.querySelectorAll('.xron-filter-btn [data-i18n]').forEach(el => {
+        el.textContent = I18n.t(el.dataset.i18n);
+      });
+    });
+  </script>
+
+  <style>
+    /* ===================================================
+       XRONOLOGIYA HERO
+       =================================================== */
+    .xron-hero {
+      position: relative;
+      padding: 120px 0 80px;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .xron-hero-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .xron-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+    }
+
+    .xron-orb-1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(201,162,39,0.15), transparent 70%);
+      top: -150px; left: 50%;
+      transform: translateX(-50%);
+      animation: float 9s ease-in-out infinite;
+    }
+
+    .xron-orb-2 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(176,125,82,0.1), transparent 70%);
+      bottom: 0; left: 5%;
+      animation: float 7s ease-in-out 2s infinite reverse;
+    }
+
+    .xron-orb-3 {
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(91,155,213,0.08), transparent 70%);
+      top: 20%; right: 5%;
+      animation: float 8s ease-in-out 1s infinite;
+    }
+
+    .xron-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .xron-hero-icon {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+      display: block;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .xron-hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      padding: 5px 16px;
+      background: var(--gold-glow);
+      border: 1px solid rgba(201,162,39,0.3);
+      border-radius: 100px;
+    }
+
+    .xron-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      color: var(--text-primary);
+    }
+
+    .xron-hero-accent {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-style: italic;
+    }
+
+    .xron-hero-desc {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+
+    .xron-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .xron-stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .xron-stat-num {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .xron-stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .xron-stat-divider {
+      color: var(--border);
+      font-size: 1.2rem;
+    }
+
+    /* ===================================================
+       FILTRLAR
+       =================================================== */
+    .xron-filters-section {
+      padding: 0 0 16px;
+      position: sticky;
+      top: var(--nav-height);
+      z-index: 40;
+      background: linear-gradient(180deg, var(--bg-parchment) 80%, transparent);
+      backdrop-filter: blur(12px);
+    }
+
+    .xron-filters {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 20px 0 12px;
+    }
+
+    .xron-filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 20px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+      font-family: var(--font-body);
+      letter-spacing: 0.02em;
+    }
+
+    .xron-filter-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+      background: var(--bg-card-hover);
+      transform: translateY(-1px);
+    }
+
+    .xron-filter-btn.active {
+      border-color: var(--gold);
+      background: rgba(184,134,11,0.1);
+      color: #7a5808;
+      box-shadow: 0 2px 12px rgba(184,134,11,0.15);
+    }
+
+    .filter-icon { font-size: 0.9rem; }
+
+    /* ===================================================
+       TIMELINE BOSH KONTEYNER
+       =================================================== */
+    .xron-timeline-section {
+      padding: 20px 0 100px;
+    }
+
+    .xron-timeline {
+      position: relative;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px 0 40px;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    /* Vertikal chiziq */
+    .xron-line {
+      position: absolute;
+      left: 50%;
+      top: 0; bottom: 0;
+      transform: translateX(-50%);
+      width: 2px;
+    }
+
+    .xron-line-inner {
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(180deg,
+        transparent 0%,
+        rgba(201,162,39,0.4) 8%,
+        rgba(201,162,39,0.6) 50%,
+        rgba(201,162,39,0.4) 92%,
+        transparent 100%
+      );
+    }
+
+    /* ===================================================
+       DAVR BO'LUVCHI
+       =================================================== */
+    .xron-period-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 48px 0 32px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .period-divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .period-divider-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 18px;
+      border-radius: 100px;
+      border: 1px solid;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      background: var(--bg-primary);
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    /* ===================================================
+       TIMELINE ELEMENT
+       =================================================== */
+    .xron-item {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Chap element: karta chapda, tugun o'rtada */
+    .xron-item-left .xron-card  { grid-column: 1; grid-row: 1; }
+    .xron-item-left .xron-node  { grid-column: 2; grid-row: 1; justify-self: center; }
+    .xron-item-left .xron-card .xron-connector { right: -20px; left: auto; }
+
+    /* O'ng element: tugun o'rtada, karta o'ngda */
+    .xron-item-right .xron-node { grid-column: 2; grid-row: 1; justify-self: center; }
+    .xron-item-right .xron-card { grid-column: 3; grid-row: 1; }
+    .xron-item-right .xron-card .xron-connector { left: -20px; right: auto; }
+
+    /* ===================================================
+       MARKAZIY TUGUN
+       =================================================== */
+    .xron-node {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      position: relative;
+      flex-shrink: 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .xron-item:hover .xron-node {
+      transform: scale(1.15);
+    }
+
+    .xron-node-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    /* ===================================================
+       KARTA
+       =================================================== */
+    .xron-card {
+      position: relative;
+      padding: 2px;
+    }
+
+    .xron-card-inner {
+      background: var(--bg-card);
+      border: 1px solid;
+      border-radius: var(--border-radius);
+      padding: 24px 28px;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .xron-card-inner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--card-glow, transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: var(--border-radius);
+    }
+
+    .xron-item:hover .xron-card-inner {
+      background: var(--bg-card-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+
+    .xron-item:hover .xron-card-inner::before {
+      opacity: 0.5;
+    }
+
+    /* Chiziq (kartadan tugunga) */
+    .xron-connector {
+      position: absolute;
+      top: 50%;
+      width: 24px;
+      height: 1px;
+      opacity: 0.6;
+      transform: translateY(-50%);
+    }
+
+    /* Yil badge */
+    .xron-year-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      border: 1px solid;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-family: var(--font-display);
+      letter-spacing: 0.04em;
+    }
+
+    .xron-year-icon { font-size: 0.7rem; }
+
+    .xron-card-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+
+    .xron-card-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    .xron-card-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .xron-period-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ===================================================
+       BOʻSH HOLAT
+       =================================================== */
+    .xron-empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+    }
+
+    .xron-empty p {
+      margin-top: 16px;
+      font-size: 0.95rem;
+    }
+
+    /* ===================================================
+       YUKLANISH
+       =================================================== */
+    .xron-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 80px 20px;
+      color: var(--text-muted);
+    }
+
+    .xron-spinner {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold);
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===================================================
+       MOBIL RESPONSIV
+       =================================================== */
+    @media (max-width: 768px) {
+      /* Mobil: barcha elementlar o'ng tomonda, chiziq chap tomonda */
+      .xron-line { left: 20px; transform: none; }
+
+      .xron-item {
+        grid-template-columns: 40px 1fr;
+        margin-left: 0;
+        margin-bottom: 28px;
+      }
+
+      .xron-item-left .xron-node,
+      .xron-item-right .xron-node {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: center;
+      }
+
+      .xron-item-left .xron-card,
+      .xron-item-right .xron-card {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      .xron-item-left .xron-card .xron-connector,
+      .xron-item-right .xron-card .xron-connector {
+        left: -20px;
+        right: auto;
+      }
+
+      .xron-card-inner { padding: 18px 20px; }
+      .xron-card-title { font-size: 1rem; }
+
+      .xron-period-divider { margin: 32px 0 20px; }
+      .xron-timeline-section { padding: 10px 0 60px; }
+
+      .xron-hero { padding: 100px 0 60px; }
+      .xron-hero-icon { font-size: 2.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .xron-stats { gap: 12px; }
+      .xron-stat-num { font-size: 1.4rem; }
+      .xron-filters { gap: 6px; }
+      .xron-filter-btn { padding: 7px 14px; font-size: 0.76rem; }
+    }
+
+    /* ===================================================
+       FADE-IN ANIMATSIYA OVERRIDE
+       =================================================== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .xron-item.fade-in { transition-delay: calc(var(--i, 0) * 0.05s); }
+  </style>
+
+
+  <script src="js/effects.js"></script>
+  <script src="js/ai-assistant.js"></script>
+</body>
+</html>

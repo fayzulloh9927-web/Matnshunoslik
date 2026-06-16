@@ -1,0 +1,958 @@
+﻿<!DOCTYPE html>
+<html lang="uz" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Matnshunoslik va Manbashunoslik ilmlariga bag'ishlangan ko'p qirrali ilmiy platforma. Asarlar tahlili, mualliflar, tadqiqotchilar, xronologiya va manbalar." />
+  <meta name="keywords" content="matnshunoslik, manbashunoslik, Navoiy, Beruniy, qo'lyozma, tadqiqot, ilmiy platforma" />
+  <meta property="og:title" content="Matnshunoslik & Manbashunoslik — Ilmiy Platforma" />
+  <meta property="og:type" content="website" />
+  <title>Matnshunoslik & Manbashunoslik — Ilmiy Platforma</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/extras.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📜</text></svg>" />
+
+  <style>
+  /* ===================================================
+     BOSH SAHIFAGA XOS STILLAR — PARCHMENT USLUBI
+     =================================================== */
+
+  /* ---- HERO ---- */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--bg-parchment);
+  }
+
+  /* Fon tekstura */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* Iliq gradient xalqalar */
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+  }
+  .hero-orb-1 {
+    width: 700px; height: 500px;
+    background: radial-gradient(ellipse, rgba(210,170,60,0.18), transparent);
+    top: -180px; left: -120px;
+    animation: float 10s ease-in-out infinite;
+  }
+  .hero-orb-2 {
+    width: 500px; height: 400px;
+    background: radial-gradient(ellipse, rgba(139,26,47,0.07), transparent);
+    bottom: -80px; right: 5%;
+    animation: float 13s ease-in-out 2s infinite reverse;
+  }
+  .hero-orb-3 {
+    width: 350px; height: 350px;
+    background: radial-gradient(ellipse, rgba(42,80,64,0.06), transparent);
+    top: 35%; right: 12%;
+    animation: float 9s ease-in-out 1s infinite;
+  }
+
+  /* Vertikal chiziqlar (qog'oz effekti) */
+  .hero-lines {
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 59px,
+        rgba(184,134,11,0.04) 59px,
+        rgba(184,134,11,0.04) 60px
+      ),
+      repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        transparent 35px,
+        rgba(100,70,28,0.025) 35px,
+        rgba(100,70,28,0.025) 36px
+      );
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+    padding: 130px 0 90px;
+  }
+
+  @media (max-width: 1024px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .hero-visual { display: none; }
+  }
+
+  /* Chap tomonidagi matn */
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-label);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ruby);
+    margin-bottom: 18px;
+    padding: 5px 14px;
+    background: rgba(139,26,47,0.07);
+    border: 1px solid rgba(139,26,47,0.2);
+    border-radius: 100px;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.08;
+    color: var(--ink-dark);
+    margin-bottom: 18px;
+    letter-spacing: 0.01em;
+  }
+
+  .hero-title-line2 {
+    display: block;
+    font-style: italic;
+    font-size: 0.72em;
+    color: var(--gold);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-top: 4px;
+  }
+
+  .hero-desc {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    max-width: 520px;
+    margin-bottom: 28px;
+  }
+
+  /* Qidiruv */
+  .hero-search {
+    max-width: 500px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .search-results {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    z-index: var(--z-dropdown);
+    overflow: hidden;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  /* Tugmalar */
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  /* Tillar */
+  .hero-langs { display: flex; gap: 7px; flex-wrap: wrap; }
+  .hero-lang-item {
+    font-family: var(--font-label);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    padding: 3px 10px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+  }
+
+  /* Scroll hint */
+  .hero-scroll {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 36px;
+    font-family: var(--font-label);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .scroll-line {
+    width: 1px; height: 44px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 1; transform: scaleY(1); }
+    50%       { opacity: 0.4; transform: scaleY(0.65); }
+  }
+
+  /* ---- HERO VIZUAL (O'NG) ---- */
+  .hero-visual {
+    position: relative;
+    height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-manuscript-wrap {
+    position: relative;
+    width: 280px;
+    height: 380px;
+  }
+
+  /* Asosiy qo'lyozma kartasi */
+  .hero-manuscript-card {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(155deg, #fef9ee 0%, #f5ead4 40%, #eddbb8 100%);
+    border-radius: 12px;
+    border: 1px solid rgba(184,134,11,0.3);
+    box-shadow:
+      0 20px 60px rgba(80,50,16,0.25),
+      0 4px 12px rgba(80,50,16,0.15),
+      inset 0 1px 0 rgba(255,255,255,0.8);
+    padding: 36px 32px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Yuqori bezak chizig'i */
+  .hero-manuscript-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--ruby), var(--gold), var(--leather-light), var(--gold), var(--ruby));
+  }
+
+  /* Qog'oz chetidagi soya */
+  .hero-manuscript-card::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; right: -2px;
+    width: 8px;
+    background: linear-gradient(90deg, rgba(80,50,16,0.08), rgba(80,50,16,0.18));
+    border-radius: 0 12px 12px 0;
+  }
+
+  /* Matn satrlari simulyatsiyasi */
+  .ms-lines { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .ms-line {
+    height: 1.5px;
+    border-radius: 1px;
+    background: rgba(74, 50, 32, 0.18);
+    width: 100%;
+  }
+  .ms-line-short    { width: 60%; }
+  .ms-line-medium   { width: 75%; }
+  .ms-line-shorter  { width: 45%; }
+  .ms-line-ruby     { background: rgba(139,26,47,0.35); width: 55%; height: 2px; }
+  .ms-line-gold     { background: rgba(184,134,11,0.4); width: 70%; height: 2px; }
+  .ms-line-header {
+    height: 3px;
+    background: linear-gradient(90deg, var(--ruby), var(--gold));
+    width: 80%;
+    border-radius: 2px;
+    margin-bottom: 4px;
+  }
+
+  /* O'ng pastdagi muhur */
+  .ms-seal {
+    position: absolute;
+    bottom: 24px; right: 22px;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: 2px solid rgba(184,134,11,0.5);
+    background: rgba(184,134,11,0.08);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    gap: 2px;
+  }
+
+  /* Chap yuqoridagi teg */
+  .ms-tag {
+    position: absolute;
+    top: 22px; left: 22px;
+    display: flex;
+    align-items: center; gap: 6px;
+  }
+  .ms-tag-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ruby);
+  }
+  .ms-tag-text {
+    font-family: var(--font-label);
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ruby);
+  }
+
+  /* Suzuvchi kartochkalar */
+  .hero-float-card {
+    position: absolute;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow-md);
+    white-space: nowrap;
+  }
+
+  .float-icon { font-size: 1.2rem; }
+  .float-title { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; color: var(--ink-dark); }
+  .float-sub   { font-size: 0.7rem; color: var(--text-muted); }
+
+  .card-float-1 {
+    top: 60px; left: -70px;
+    animation: float 4s ease-in-out infinite;
+  }
+  .card-float-2 {
+    top: 180px; right: -80px;
+    animation: float 5.5s ease-in-out 1s infinite reverse;
+  }
+  .card-float-3 {
+    bottom: 80px; left: -50px;
+    animation: float 4.8s ease-in-out 0.5s infinite;
+  }
+
+  /* ---- STATISTIKA ---- */
+  .stats-section {
+    padding: 56px 0;
+    background: var(--bg-cream);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  /* Yuqori oltin chiziq */
+  .stats-section::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--ruby), var(--gold), transparent);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+
+  @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+
+  .stat-item {
+    text-align: center;
+    padding: 32px 20px;
+    position: relative;
+    transition: background var(--transition-base);
+  }
+
+  .stat-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 20%; bottom: 20%;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, var(--border), transparent);
+  }
+
+  .stat-item:hover { background: rgba(184,134,11,0.04); }
+
+  .stat-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .stat-number {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  .stat-label {
+    font-family: var(--font-label);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ---- BO'LIM ---- */
+  .section { padding: 96px 0; }
+  .section-alt {
+    background: var(--bg-cream);
+    position: relative;
+  }
+  .section-alt::before {
+    content: ''; position: absolute; top:0; left:0; right:0; height:1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+  .section-alt::after {
+    content: ''; position: absolute; bottom:0; left:0; right:0; height:1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  /* ---- KARTOCHKALAR GRIDI ---- */
+  .cards-grid, .authors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  /* ---- XRONOLOGIYA MINI ---- */
+  .timeline-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .timeline-preview-item {
+    display: flex;
+    gap: 14px;
+    padding: 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+  }
+  .timeline-preview-item:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+    box-shadow: var(--shadow-gold);
+    transform: translateY(-3px);
+  }
+
+  .tpi-year {
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ruby);
+    min-width: 52px;
+  }
+  .tpi-dot  { font-size: 1.2rem; flex-shrink: 0; }
+  .tpi-title {
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--ink-dark);
+  }
+  .tpi-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.5; margin: 0;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+
+  /* ---- TEZKOR KIRISH ---- */
+  .quick-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 1024px) { .quick-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .quick-grid { grid-template-columns: 1fr; } }
+
+  .quick-card {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+    padding: 26px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    text-decoration: none; color: inherit;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .quick-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--ruby), var(--gold), var(--leather-light));
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+  .quick-card:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-gold);
+  }
+  .quick-card:hover::before { opacity: 1; }
+
+  .quick-icon  { font-size: 2rem; }
+  .quick-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--ink-dark); }
+  .quick-desc  { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin: 0; flex: 1; }
+  .quick-arrow {
+    font-size: 1.1rem; color: var(--gold); align-self: flex-end;
+    transition: transform var(--transition-base);
+    font-family: var(--font-body);
+  }
+  .quick-card:hover .quick-arrow { transform: translateX(5px); }
+
+  /* ---- KARTOCHKA STILLARI (bosh sahifada ishlatiladigan) ---- */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: all var(--transition-base);
+    position: relative;
+    box-shadow: var(--shadow-sm);
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0; transition: opacity var(--transition-base);
+  }
+  .card:hover {
+    border-color: var(--border-hover); background: var(--bg-card-hover);
+    box-shadow: var(--shadow-gold); transform: translateY(-5px);
+  }
+  .card:hover::before { opacity: 1; }
+  .card-body { padding: 22px; }
+  </style>
+</head>
+<body data-page-key="hero.title">
+
+  <div id="nav-container"></div>
+
+  <main class="pt-nav">
+
+    <!-- ========================================================
+         HERO
+         ======================================================== -->
+    <section class="hero" aria-label="Hero bo'limi">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-orb hero-orb-1"></div>
+        <div class="hero-orb hero-orb-2"></div>
+        <div class="hero-orb hero-orb-3"></div>
+        <div class="hero-lines"></div>
+      </div>
+
+      <div class="container">
+        <div class="hero-inner">
+
+          <!-- Chap: Matn -->
+          <div class="hero-content fade-in">
+            <div class="hero-eyebrow" data-i18n="hero.label"></div>
+
+            <h1 class="hero-title">
+              <span data-i18n="hero.title"></span>
+              <span class="hero-title-line2" data-i18n="hero.subtitle"></span>
+            </h1>
+
+            <p class="hero-desc" data-i18n="hero.desc"></p>
+
+            <!-- Qidiruv -->
+            <div class="hero-search">
+              <div class="search-box">
+                <input type="search" id="global-search" class="search-input"
+                  data-i18n-placeholder="search.placeholder" autocomplete="off" />
+                <span class="search-icon">🔍</span>
+                <div id="search-results" class="search-results" hidden></div>
+              </div>
+            </div>
+
+            <!-- Tugmalar -->
+            <div class="hero-actions">
+              <a href="asarlar.html" class="btn btn-primary btn-lg">
+                <span>📜</span>
+                <span data-i18n="hero.btn_explore"></span>
+              </a>
+              <a href="#about" class="btn btn-secondary btn-lg">
+                <span data-i18n="hero.btn_about"></span>
+              </a>
+            </div>
+
+            <!-- Tillar -->
+            <div class="hero-langs" aria-label="Mavjud tillar">
+              <span class="hero-lang-item" title="O'zbek">🇺🇿 UZ</span>
+              <span class="hero-lang-item" title="Русский">🇷🇺 RU</span>
+              <span class="hero-lang-item" title="English">🇬🇧 EN</span>
+              <span class="hero-lang-item" title="عربي">🇸🇦 AR</span>
+              <span class="hero-lang-item" title="فارسی">🇮🇷 FA</span>
+              <span class="hero-lang-item" title="Türkçe">🇹🇷 TR</span>
+            </div>
+          </div>
+
+          <!-- O'ng: Vizual -->
+          <div class="hero-visual fade-in-right" aria-hidden="true">
+            <div class="hero-manuscript-wrap">
+
+              <!-- Suzuvchi kartochkalar -->
+              <div class="hero-float-card card-float-1">
+                <span class="float-icon">📜</span>
+                <div>
+                  <div class="float-title">Xamsa</div>
+                  <div class="float-sub">Alisher Navoiy · 1483</div>
+                </div>
+              </div>
+
+              <div class="hero-float-card card-float-2">
+                <span class="float-icon">📖</span>
+                <div>
+                  <div class="float-title">Devonu lug'otit turk</div>
+                  <div class="float-sub">Koshg'ariy · 1072</div>
+                </div>
+              </div>
+
+              <div class="hero-float-card card-float-3">
+                <span class="float-icon">🔍</span>
+                <div>
+                  <div class="float-title">Matnshunoslik</div>
+                  <div class="float-sub">Ilmiy tadqiqot</div>
+                </div>
+              </div>
+
+              <!-- Asosiy qo'lyozma kartasi -->
+              <div class="hero-manuscript-card">
+                <div class="ms-tag">
+                  <div class="ms-tag-dot"></div>
+                  <span class="ms-tag-text">Qo'lyozma · XV asr</span>
+                </div>
+
+                <div style="height:44px"></div>
+
+                <div class="ms-lines">
+                  <div class="ms-line ms-line-header"></div>
+                  <div class="ms-line ms-line-gold"></div>
+                  <div class="ms-line"></div>
+                  <div class="ms-line ms-line-short"></div>
+                  <div class="ms-line"></div>
+                  <div class="ms-line ms-line-ruby"></div>
+                  <div class="ms-line ms-line-medium"></div>
+                  <div class="ms-line"></div>
+                  <div class="ms-line ms-line-shorter"></div>
+                  <div class="ms-line"></div>
+                  <div class="ms-line ms-line-gold"></div>
+                  <div class="ms-line ms-line-short"></div>
+                  <div class="ms-line ms-line-header"></div>
+                  <div class="ms-line ms-line-medium"></div>
+                  <div class="ms-line"></div>
+                  <div class="ms-line ms-line-ruby"></div>
+                </div>
+
+                <div class="ms-seal">
+                  <span style="font-size:1.4rem">📜</span>
+                  <span style="font-family:var(--font-label);font-size:0.45rem;letter-spacing:0.08em;color:var(--gold)">MEROS</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Pastga imo-ishora -->
+        <div class="hero-scroll" aria-hidden="true">
+          <div class="scroll-line"></div>
+          <span data-i18n="hero.scroll_hint"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         STATISTIKA
+         ======================================================== -->
+    <section class="stats-section" id="about">
+      <div class="container">
+        <div class="stats-grid stagger-children">
+          <div class="stat-item">
+            <div class="stat-icon">📜</div>
+            <div class="stat-number" data-count="124">0</div>
+            <div class="stat-label" data-i18n="stats.works"></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">✒️</div>
+            <div class="stat-number" data-count="58">0</div>
+            <div class="stat-label" data-i18n="stats.authors"></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">🔍</div>
+            <div class="stat-number" data-count="93">0</div>
+            <div class="stat-label" data-i18n="stats.researchers"></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">📚</div>
+            <div class="stat-number" data-count="340">0</div>
+            <div class="stat-label" data-i18n="stats.sources"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         TANLANGAN ASARLAR
+         ======================================================== -->
+    <section class="section" id="featured-works">
+      <div class="container">
+        <div class="section-header fade-in">
+          <div class="section-label" data-i18n="sections.featured_works"></div>
+          <h2 class="section-title" data-i18n="sections.featured_works"></h2>
+          <p class="section-desc" data-i18n="sections.featured_works_desc"></p>
+        </div>
+        <div class="cards-grid stagger-children" id="works-grid">
+          <div class="loading-overlay" style="grid-column:1/-1"><div class="spinner"></div></div>
+        </div>
+        <div style="text-align:center;margin-top:36px">
+          <a href="asarlar.html" class="btn btn-secondary" data-i18n="common.read_more"></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         TANIQLI MUALLIFLAR
+         ======================================================== -->
+    <section class="section section-alt" id="notable-authors">
+      <div class="container">
+        <div class="section-header fade-in">
+          <div class="section-label" data-i18n="sections.notable_authors"></div>
+          <h2 class="section-title" data-i18n="sections.notable_authors"></h2>
+          <p class="section-desc" data-i18n="sections.notable_authors_desc"></p>
+        </div>
+        <div class="authors-grid stagger-children" id="authors-grid">
+          <div class="loading-overlay" style="grid-column:1/-1"><div class="spinner"></div></div>
+        </div>
+        <div style="text-align:center;margin-top:36px">
+          <a href="mualliflar.html" class="btn btn-secondary" data-i18n="common.read_more"></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         XRONOLOGIYA MINI
+         ======================================================== -->
+    <section class="section" id="timeline-preview">
+      <div class="container">
+        <div class="section-header fade-in">
+          <div class="section-label" data-i18n="sections.timeline_preview"></div>
+          <h2 class="section-title" data-i18n="sections.timeline_preview"></h2>
+          <p class="section-desc" data-i18n="sections.timeline_preview_desc"></p>
+        </div>
+        <div class="timeline-preview-grid stagger-children" id="timeline-preview-grid"></div>
+        <div style="text-align:center;margin-top:36px">
+          <a href="xronologiya.html" class="btn btn-primary">
+            <span>🕰️</span>
+            <span data-i18n="nav.timeline"></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         TEZKOR KIRISH
+         ======================================================== -->
+    <section class="section section-alt" id="quick-access">
+      <div class="container">
+        <div class="section-header fade-in">
+          <div class="section-label" data-i18n="sections.quick_access"></div>
+          <h2 class="section-title" data-i18n="sections.quick_access"></h2>
+        </div>
+        <div class="quick-grid stagger-children">
+          <a href="asarlar.html" class="quick-card">
+            <div class="quick-icon">📜</div>
+            <h3 class="quick-title" data-i18n="nav.works"></h3>
+            <p class="quick-desc" data-i18n="works.desc"></p>
+            <span class="quick-arrow">→</span>
+          </a>
+          <a href="mualliflar.html" class="quick-card">
+            <div class="quick-icon">✒️</div>
+            <h3 class="quick-title" data-i18n="nav.authors"></h3>
+            <p class="quick-desc" data-i18n="authors.desc"></p>
+            <span class="quick-arrow">→</span>
+          </a>
+          <a href="tadqiqotchilar.html" class="quick-card">
+            <div class="quick-icon">🔍</div>
+            <h3 class="quick-title" data-i18n="nav.researchers"></h3>
+            <p class="quick-desc" data-i18n="researchers.desc"></p>
+            <span class="quick-arrow">→</span>
+          </a>
+          <a href="xronologiya.html" class="quick-card">
+            <div class="quick-icon">⏳</div>
+            <h3 class="quick-title" data-i18n="nav.timeline"></h3>
+            <p class="quick-desc" data-i18n="timeline.desc"></p>
+            <span class="quick-arrow">→</span>
+          </a>
+          <a href="tarmoq.html" class="quick-card">
+            <div class="quick-icon">🕸️</div>
+            <h3 class="quick-title" data-i18n="nav.network"></h3>
+            <p class="quick-desc" data-i18n="network.desc"></p>
+            <span class="quick-arrow">→</span>
+          </a>
+          <a href="manbalar.html" class="quick-card">
+            <div class="quick-icon">📚</div>
+            <h3 class="quick-title" data-i18n="nav.sources"></h3>
+            <p class="quick-desc" data-i18n="sources.desc"></p>
+            <span class="quick-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/supabase.js"></script>
+  <script>
+    async function PageInit() {
+      document.title = 'Matnshunoslik & Manbashunoslik — Ilmiy Platforma';
+      await Promise.all([loadFeaturedWorks(), loadNotableAuthors(), loadTimelinePreview()]);
+      initCounters();
+    }
+
+    /* Tanlangan asarlar */
+    async function loadFeaturedWorks() {
+      const grid = document.getElementById('works-grid');
+      if (!grid) return;
+      try {
+        const data = await DataLoader.load('asarlar');
+        const featured = data.filter(w => w.featured).slice(0, 4);
+        if (!featured.length) { grid.innerHTML = ''; return; }
+        const badgeCls = { gold:'badge-gold', leather:'badge-leather', ruby:'badge-ruby', emerald:'badge-emerald', sapphire:'badge-sapphire' };
+        const genreEmoji = { poetry:'📜', prose:'📖', history:'📰', science:'⚗️', linguistics:'🔤' };
+        grid.innerHTML = featured.map(w => {
+          const title  = I18n.tObj(w.title);
+          const desc   = I18n.tObj(w.description || {});
+          const author = I18n.tObj(w.author_name || {});
+          const badge  = badgeCls[w.badge] || 'badge-gold';
+          const genres = (w.genre || []).map(g => `<span class="badge ${badge}" style="font-size:0.62rem">${genreEmoji[g]||''} ${g}</span>`).join(' ');
+          return `
+          <article class="card fade-in" onclick="location.href='asarlar.html#${w.id}'" style="cursor:pointer">
+            <div class="card-body">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+                <span style="font-size:2.2rem">📜</span>
+                <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">${genres}</div>
+              </div>
+              <h3 style="font-family:var(--font-display);font-size:1.15rem;margin-bottom:6px;color:var(--ink-dark)">${title}</h3>
+              <p style="font-size:0.82rem;color:var(--gold);margin-bottom:10px;font-family:var(--font-body)">✍️ ${author} · ${w.year_written||''}</p>
+              <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${desc}</p>
+              <div style="margin-top:14px;font-size:0.8rem;color:var(--ruby);font-family:var(--font-body)">Batafsil o'qish →</div>
+            </div>
+          </article>`;
+        }).join('');
+        ScrollAnim.init();
+      } catch(e) { console.warn(e); grid.innerHTML = ''; }
+    }
+
+    /* Mualliflar */
+    async function loadNotableAuthors() {
+      const grid = document.getElementById('authors-grid');
+      if (!grid) return;
+      try {
+        const data = await DataLoader.load('mualliflar');
+        const featured = data.filter(a => a.featured).slice(0, 4);
+        if (!featured.length) { grid.innerHTML = ''; return; }
+        const badgeCls = { gold:'badge-gold', leather:'badge-leather', ruby:'badge-ruby', emerald:'badge-emerald', sapphire:'badge-sapphire' };
+        grid.innerHTML = featured.map(a => {
+          const name   = I18n.tObj(a.name);
+          const era    = I18n.tObj(a.era);
+          const region = I18n.tObj(a.region);
+          const bio    = I18n.tObj(a.bio) || '';
+          const badge  = badgeCls[a.badge] || 'badge-gold';
+          return `
+          <article class="card fade-in" onclick="location.href='mualliflar.html#${a.id}'" style="cursor:pointer">
+            <div class="card-body">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+                <div style="width:50px;height:50px;border-radius:50%;background:rgba(184,134,11,0.1);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.5rem">👤</div>
+                <span class="badge ${badge}">${era}</span>
+              </div>
+              <h3 style="font-family:var(--font-display);font-size:1.15rem;margin-bottom:4px;color:var(--ink-dark)">${name}</h3>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:10px">📍 ${region}</p>
+              <p style="font-size:0.87rem;color:var(--text-secondary);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${bio}</p>
+              <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:0.78rem;color:var(--text-muted)">📜 ${a.works_count||0} ta asar</span>
+                <span style="font-size:0.8rem;color:var(--ruby)">Profil →</span>
+              </div>
+            </div>
+          </article>`;
+        }).join('');
+        ScrollAnim.init();
+      } catch(e) { console.warn(e); grid.innerHTML = ''; }
+    }
+
+    /* Xronologiya */
+    async function loadTimelinePreview() {
+      const grid = document.getElementById('timeline-preview-grid');
+      if (!grid) return;
+      try {
+        const data = await DataLoader.load('xronologiya');
+        const items = data.slice(-6).reverse();
+        grid.innerHTML = items.map(item => `
+          <div class="timeline-preview-item fade-in">
+            <div class="tpi-year">${item.year > 0 ? item.year : Math.abs(item.year)+' BC'}</div>
+            <div class="tpi-dot">${item.icon||'📌'}</div>
+            <div>
+              <div class="tpi-title">${I18n.tObj(item.title||{})}</div>
+              <p class="tpi-desc">${I18n.tObj(item.desc||{})||''}</p>
+            </div>
+          </div>`).join('');
+        ScrollAnim.init();
+      } catch(e) { console.warn(e); }
+    }
+
+    /* Raqamlar animatsiyasi */
+    function initCounters() {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const el  = entry.target;
+          const end = parseInt(el.dataset.count);
+          const dur = 1800; const step = 16;
+          const inc = end / (dur / step);
+          let cur = 0;
+          const t = setInterval(() => {
+            cur += inc;
+            if (cur >= end) { cur = end; clearInterval(t); }
+            el.textContent = Math.floor(cur).toLocaleString();
+          }, step);
+          obs.unobserve(el);
+        });
+      }, { threshold: 0.5 });
+      document.querySelectorAll('.stat-number[data-count]').forEach(c => obs.observe(c));
+    }
+
+    I18n.onChange(async () => {
+      await Promise.all([loadFeaturedWorks(), loadNotableAuthors(), loadTimelinePreview()]);
+    });
+  </script>
+
+
+  <script src="js/effects.js"></script>
+  <script src="js/ai-assistant.js"></script>
+</body>
+</html>
